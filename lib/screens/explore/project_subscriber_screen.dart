@@ -179,29 +179,38 @@ class _BotoneraDelegate extends SliverPersistentHeaderDelegate {
   final ValueChanged<_Section> onSectionTap;
   final Color backgroundColor;
 
+  // 2 rows of pills: 12 top + 32 pill + 8 gap + 32 pill + 16 bottom = 100
   @override
-  double get minExtent => 64;
+  double get minExtent => 100;
   @override
-  double get maxExtent => 64;
+  double get maxExtent => 100;
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: backgroundColor,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        itemCount: _Section.values.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (context, index) {
-          final section = _Section.values[index];
+    return SizedBox.expand(
+      child: Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF101C2C).withValues(alpha: 0.10),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: _Section.values.map((section) {
           final isActive = section == activeSection;
           return GestureDetector(
             onTap: () => onSectionTap(section),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: isActive ? FaumaColors.primary : Colors.transparent,
                 borderRadius: BorderRadius.circular(999),
@@ -214,15 +223,16 @@ class _BotoneraDelegate extends SliverPersistentHeaderDelegate {
               child: Text(
                 section.label,
                 style: GoogleFonts.inter(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                  color: isActive ? Colors.white : FaumaColors.secondary,
+                  color: isActive ? Colors.white : const Color(0xFF15686F),
                 ),
               ),
             ),
           );
-        },
+        }).toList(),
       ),
+    ),
     );
   }
 
@@ -241,7 +251,7 @@ class _TimelineContent extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
       children: [
-        // Phase 0 — Contexto
+        // Phase 0 -- Contexto
         _TimelinePhase(
           number: '0',
           isCompleted: false,
@@ -252,7 +262,7 @@ class _TimelineContent extends StatelessWidget {
           description:
               'Huevos de tibur\u00F3n descartados como subproducto de la pesca (bycatch).',
         ),
-        // Phase 1 — Recoleccion
+        // Phase 1 -- Recoleccion
         _TimelinePhase(
           number: '1',
           isCompleted: true,
@@ -266,7 +276,7 @@ class _TimelineContent extends StatelessWidget {
           imageCaption:
               'Recuperaci\u00F3n de c\u00E1psulas de huevos en redes de arrastre.',
         ),
-        // Phase 2 — Triaje
+        // Phase 2 -- Triaje
         _TimelinePhase(
           number: '2',
           isCompleted: true,
@@ -278,7 +288,7 @@ class _TimelineContent extends StatelessWidget {
           description:
               'Clasificaci\u00F3n rigurosa por estado embrionario y viabilidad biol\u00F3gica.',
         ),
-        // Phase 3 — Incubacion (current)
+        // Phase 3 -- Incubacion (current)
         _TimelinePhase(
           number: '3',
           isCompleted: false,
@@ -296,7 +306,7 @@ class _TimelineContent extends StatelessWidget {
             _SubStep('3.6 Biometr\u00EDa final', null, false),
           ],
         ),
-        // Phase 4 — Eclosion
+        // Phase 4 -- Eclosion
         _TimelinePhase(
           number: '4',
           isCompleted: false,
@@ -308,7 +318,7 @@ class _TimelineContent extends StatelessWidget {
           description: 'Seguimiento post-eclosi\u00F3n de los alevines.',
           isFuture: true,
         ),
-        // Phase 5 — Suelta
+        // Phase 5 -- Suelta
         _TimelinePhase(
           number: '5',
           isCompleted: false,
@@ -371,7 +381,7 @@ class _TimelinePhase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dotBg = (isPast || isFuture) && !isCurrent && !isCompleted
-        ? FaumaColors.surfaceContainerLow
+        ? const Color(0xFFE6EEFF)
         : null;
 
     return Padding(
@@ -386,17 +396,17 @@ class _TimelinePhase extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isCurrent
-                  ? FaumaColors.tertiary
+                  ? const Color(0xFF641614)
                   : isCompleted
-                      ? FaumaColors.primary
-                      : dotBg ?? FaumaColors.surfaceContainerLow,
+                      ? const Color(0xFF00393E)
+                      : dotBg ?? const Color(0xFFE6EEFF),
               border: Border.all(
                   color: FaumaColors.surface, width: 4),
               boxShadow: isCurrent
                   ? [
                       BoxShadow(
                         color:
-                            FaumaColors.tertiary.withValues(alpha: 0.3),
+                            const Color(0xFF641614).withValues(alpha: 0.3),
                         blurRadius: 12,
                       ),
                     ]
@@ -454,6 +464,7 @@ class _TimelinePhase extends StatelessWidget {
                 style: GoogleFonts.newsreader(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
+                  color: const Color(0xFF101C2C),
                 ),
               ),
               if (description != null) ...[
@@ -473,18 +484,154 @@ class _TimelinePhase extends StatelessWidget {
       );
     }
 
-    // Card display
+    // Future phase without card (e.g., Phase 4)
+    if (isFuture && imageUrl == null && !isCurrent) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (tag != null)
+                        Text(
+                          tag!.toUpperCase(),
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 2,
+                            color: const Color(0xFF6F797A),
+                          ),
+                        ),
+                      if (tag != null) const SizedBox(height: 4),
+                      Text(
+                        title,
+                        style: GoogleFonts.newsreader(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF3F4849),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (icon != null)
+                  Icon(icon, color: const Color(0xFFBFC8C9)),
+              ],
+            ),
+            if (description != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                description!,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: const Color(0xFF3F4849),
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
+    }
+
+    // Future phase with image (Suelta) -- dashed border card
+    if (isFuture && imageUrl != null) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEFF4FF),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0xFFBFC8C9),
+            style: BorderStyle.solid,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (tag != null)
+                        Text(
+                          tag!.toUpperCase(),
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 2,
+                            color: const Color(0xFF6F797A),
+                          ),
+                        ),
+                      if (tag != null) const SizedBox(height: 4),
+                      Text(
+                        title,
+                        style: GoogleFonts.newsreader(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF3F4849),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (icon != null)
+                  Icon(icon, color: const Color(0xFFBFC8C9)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: SizedBox(
+                height: 128,
+                width: double.infinity,
+                child: ColorFiltered(
+                  colorFilter: const ColorFilter.mode(
+                      Colors.grey, BlendMode.saturation),
+                  child: Opacity(
+                    opacity: 0.5,
+                    child: FaumaImage(
+                        imageUrl: imageUrl!, fit: BoxFit.cover),
+                  ),
+                ),
+              ),
+            ),
+            if (imageCaption != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                imageCaption!,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: const Color(0xFF3F4849),
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
+    }
+
+    // Card display (completed phases & current)
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: isCurrent
-            ? Border.all(color: const Color(0xFFFFB4AC), width: 2)
+            ? Border.all(color: const Color(0xFFFFDAD6), width: 2)
             : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: const Color(0xFF101C2C).withValues(alpha: 0.06),
             blurRadius: 40,
             offset: const Offset(0, 12),
           ),
@@ -510,8 +657,8 @@ class _TimelinePhase extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                               letterSpacing: 2,
                               color: isCurrent
-                                  ? FaumaColors.tertiary
-                                  : FaumaColors.secondary,
+                                  ? const Color(0xFF641614)
+                                  : const Color(0xFF15686F),
                             ),
                           ),
                           if (isCurrent) ...[
@@ -520,7 +667,7 @@ class _TimelinePhase extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
-                                color: FaumaColors.tertiary,
+                                color: const Color(0xFF641614),
                                 borderRadius: BorderRadius.circular(999),
                               ),
                               child: Text(
@@ -542,6 +689,7 @@ class _TimelinePhase extends StatelessWidget {
                       style: GoogleFonts.newsreader(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
+                        color: const Color(0xFF101C2C),
                       ),
                     ),
                   ],
@@ -550,8 +698,8 @@ class _TimelinePhase extends StatelessWidget {
               if (icon != null)
                 Icon(icon,
                     color: isCurrent
-                        ? FaumaColors.tertiary
-                        : FaumaColors.primaryContainer),
+                        ? const Color(0xFF641614)
+                        : const Color(0xFF005258)),
             ],
           ),
           if (location != null) ...[
@@ -559,14 +707,14 @@ class _TimelinePhase extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.location_on,
-                    size: 14, color: FaumaColors.secondary),
+                    size: 14, color: const Color(0xFF15686F)),
                 const SizedBox(width: 4),
                 Text(
                   location!,
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: FaumaColors.secondary,
+                    color: const Color(0xFF15686F),
                   ),
                 ),
               ],
@@ -579,18 +727,8 @@ class _TimelinePhase extends StatelessWidget {
               child: SizedBox(
                 height: 128,
                 width: double.infinity,
-                child: ColorFiltered(
-                  colorFilter: isFuture
-                      ? const ColorFilter.mode(
-                          Colors.grey, BlendMode.saturation)
-                      : const ColorFilter.mode(
-                          Colors.transparent, BlendMode.dst),
-                  child: Opacity(
-                    opacity: isFuture ? 0.5 : 1.0,
-                    child: FaumaImage(
-                        imageUrl: imageUrl!, fit: BoxFit.cover),
-                  ),
-                ),
+                child: FaumaImage(
+                    imageUrl: imageUrl!, fit: BoxFit.cover),
               ),
             ),
             if (imageCaption != null) ...[
@@ -632,7 +770,7 @@ class _TimelinePhase extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: s.isCompleted
-                                ? FaumaColors.tertiary
+                                ? const Color(0xFF641614)
                                 : Colors.transparent,
                             border: s.isCompleted
                                 ? null
@@ -649,7 +787,10 @@ class _TimelinePhase extends StatelessWidget {
                                 s.title,
                                 style: GoogleFonts.inter(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: s.isCompleted
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                  color: const Color(0xFF101C2C),
                                 ),
                               ),
                               if (s.description != null) ...[
@@ -731,11 +872,11 @@ class _FichaTecnicaContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        // Taxonomy
+        // 1. Taxonomia y Clasificacion
         _FichaCard(
-          borderColor: FaumaColors.primary,
+          borderColor: const Color(0xFF00393E),
           icon: Icons.account_tree,
-          iconColor: FaumaColors.primaryContainer,
+          iconColor: const Color(0xFF005258),
           title: 'Taxonom\u00EDa y Clasificaci\u00F3n',
           children: [
             _FichaField('Clase', 'Chondrichthyes'),
@@ -747,11 +888,11 @@ class _FichaTecnicaContent extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        // Biology
+        // 2. Biologia y Morfologia
         _FichaCard(
-          borderColor: FaumaColors.secondary,
+          borderColor: const Color(0xFF15686F),
           icon: Icons.biotech,
-          iconColor: FaumaColors.secondary,
+          iconColor: const Color(0xFF15686F),
           title: 'Biolog\u00EDa y Morfolog\u00EDa',
           children: [
             Row(
@@ -762,17 +903,19 @@ class _FichaTecnicaContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            _FichaField('Color', 'Marr\u00F3n claro con manchas oscuras.'),
+            _FichaField('Color',
+                'Marr\u00F3n claro con manchas oscuras.'),
             const SizedBox(height: 12),
-            _FichaField('Caracter\u00EDsticas', 'Piel \u00E1spera, cuerpo esbelto.'),
+            _FichaField('Caracter\u00EDsticas',
+                'Piel \u00E1spera, cuerpo esbelto.'),
           ],
         ),
         const SizedBox(height: 16),
-        // Ecology
+        // 3. Ecologia
         _FichaCard(
-          borderColor: FaumaColors.primary,
+          borderColor: const Color(0xFF00393E),
           icon: Icons.eco,
-          iconColor: FaumaColors.primary,
+          iconColor: const Color(0xFF00393E),
           title: 'Ecolog\u00EDa',
           children: [
             _FichaField('H\u00E1bitat',
@@ -786,11 +929,11 @@ class _FichaTecnicaContent extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        // Reproduction
+        // 4. Reproduccion
         _FichaCard(
           borderColor: const Color(0xFF92D1D8),
           icon: Icons.egg,
-          iconColor: FaumaColors.primaryContainer,
+          iconColor: const Color(0xFF005258),
           title: 'Reproducci\u00F3n',
           children: [
             Row(
@@ -805,11 +948,11 @@ class _FichaTecnicaContent extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        // Conservation
+        // 5. Conservacion
         _FichaCard(
-          borderColor: FaumaColors.tertiary,
+          borderColor: const Color(0xFFBA1A1A),
           icon: Icons.verified_user,
-          iconColor: FaumaColors.tertiary,
+          iconColor: const Color(0xFFBA1A1A),
           title: 'Conservaci\u00F3n',
           children: [
             Row(
@@ -849,8 +992,8 @@ class _FichaTecnicaContent extends StatelessWidget {
               ],
             ),
             const Divider(height: 24),
-            _FichaField(
-                'Amenazas principales', 'Bycatch, p\u00E9rdida de h\u00E1bitat.'),
+            _FichaField('Amenazas principales',
+                'Bycatch, p\u00E9rdida de h\u00E1bitat.'),
           ],
         ),
       ],
@@ -883,7 +1026,7 @@ class _FichaCard extends StatelessWidget {
         border: Border(left: BorderSide(color: borderColor, width: 4)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: const Color(0xFF101C2C).withValues(alpha: 0.06),
             blurRadius: 40,
             offset: const Offset(0, 12),
           ),
@@ -934,7 +1077,10 @@ class _FichaField extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: const Color(0xFF3F4849))),
         const SizedBox(height: 4),
-        Text(value, style: GoogleFonts.inter(fontSize: 14)),
+        Text(value,
+            style: GoogleFonts.inter(
+                fontSize: 14,
+                color: const Color(0xFF101C2C))),
       ],
     );
   }
@@ -957,7 +1103,7 @@ class _GaleriaContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
+                color: const Color(0xFF101C2C).withValues(alpha: 0.06),
                 blurRadius: 40,
                 offset: const Offset(0, 12),
               ),
@@ -993,7 +1139,7 @@ class _GaleriaContent extends StatelessWidget {
                               width: 8,
                               height: 8,
                               decoration: const BoxDecoration(
-                                color: Colors.red,
+                                color: Color(0xFFBA1A1A),
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -1034,6 +1180,21 @@ class _GaleriaContent extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Fullscreen button
+                    Positioned(
+                      bottom: 16,
+                      right: 16,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.fullscreen,
+                            color: Colors.white),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1046,7 +1207,7 @@ class _GaleriaContent extends StatelessWidget {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: FaumaColors.primary)),
+                            color: const Color(0xFF00393E))),
                     const SizedBox(height: 4),
                     Text(
                         'Observaci\u00F3n continua de embriones de Pintarroja',
@@ -1070,7 +1231,7 @@ class _GaleriaContent extends StatelessWidget {
                 style: GoogleFonts.newsreader(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
-                    color: FaumaColors.primary)),
+                    color: const Color(0xFF00393E))),
             TextButton(
               onPressed: () {},
               child: Row(
@@ -1080,10 +1241,10 @@ class _GaleriaContent extends StatelessWidget {
                       style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: FaumaColors.primaryContainer)),
+                          color: const Color(0xFF005258))),
                   const SizedBox(width: 4),
-                  Icon(Icons.chevron_right,
-                      size: 16, color: FaumaColors.primaryContainer),
+                  const Icon(Icons.chevron_right,
+                      size: 16, color: Color(0xFF005258)),
                 ],
               ),
             ),
@@ -1091,6 +1252,25 @@ class _GaleriaContent extends StatelessWidget {
         ),
 
         const SizedBox(height: 16),
+
+        // Filter chips
+        SizedBox(
+          height: 36,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              _GaleriaFilterChip(label: 'Todo', isActive: true),
+              const SizedBox(width: 8),
+              _GaleriaFilterChip(label: 'Fotos', isActive: false),
+              const SizedBox(width: 8),
+              _GaleriaFilterChip(label: 'V\u00EDdeos', isActive: false),
+              const SizedBox(width: 8),
+              _GaleriaFilterChip(label: 'Documentos', isActive: false),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 24),
 
         // Photo grid (asymmetric, 2 columns)
         Row(
@@ -1136,7 +1316,7 @@ class _GaleriaContent extends StatelessWidget {
             style: GoogleFonts.newsreader(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: FaumaColors.primary)),
+                color: const Color(0xFF00393E))),
         const SizedBox(height: 16),
         SizedBox(
           height: 200,
@@ -1202,7 +1382,7 @@ class _GaleriaContent extends StatelessWidget {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: FaumaColors.primary)),
+                            color: const Color(0xFF00393E))),
                     const SizedBox(height: 2),
                     Text(subtitles[index],
                         style: GoogleFonts.inter(
@@ -1215,6 +1395,37 @@ class _GaleriaContent extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _GaleriaFilterChip extends StatelessWidget {
+  const _GaleriaFilterChip({
+    required this.label,
+    required this.isActive,
+  });
+
+  final String label;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      decoration: BoxDecoration(
+        color: isActive
+            ? const Color(0xFF00393E)
+            : const Color(0xFFEFF4FF),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.inter(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: isActive ? Colors.white : const Color(0xFF3F4849),
+        ),
+      ),
     );
   }
 }
@@ -1251,13 +1462,13 @@ class _ProfundizandoContent extends StatelessWidget {
             style: GoogleFonts.newsreader(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
-                color: FaumaColors.primary)),
+                color: const Color(0xFF00393E))),
         const SizedBox(height: 8),
         Text(
           'Conoce los detalles cient\u00EDficos y t\u00E9cnicos del proyecto.',
           style: GoogleFonts.inter(
             fontSize: 14,
-            color: FaumaColors.secondary,
+            color: const Color(0xFF15686F),
             height: 1.7,
           ),
         ),
@@ -1316,7 +1527,7 @@ class _ProfundizandoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: const Color(0xFF101C2C).withValues(alpha: 0.06),
             blurRadius: 40,
             offset: const Offset(0, 12),
           ),
@@ -1331,10 +1542,10 @@ class _ProfundizandoCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: FaumaColors.primary.withValues(alpha: 0.1),
+                  color: const Color(0xFF00393E).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: FaumaColors.primary, size: 20),
+                child: Icon(icon, color: const Color(0xFF00393E), size: 20),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -1342,7 +1553,7 @@ class _ProfundizandoCard extends StatelessWidget {
                     style: GoogleFonts.newsreader(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: FaumaColors.primary)),
+                        color: const Color(0xFF00393E))),
               ),
             ],
           ),
@@ -1378,7 +1589,7 @@ class _EquipoContent extends StatelessWidget {
               children: [
                 FaumaImage(imageUrl: _equipoVideoUrl, fit: BoxFit.cover),
                 Container(
-                    color: FaumaColors.primary.withValues(alpha: 0.2)),
+                    color: const Color(0xFF00393E).withValues(alpha: 0.2)),
                 Center(
                   child: Container(
                     width: 56,
@@ -1386,9 +1597,15 @@ class _EquipoContent extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.9),
                       shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.15),
+                          blurRadius: 12,
+                        ),
+                      ],
                     ),
-                    child: Icon(Icons.play_arrow,
-                        color: FaumaColors.primary, size: 32),
+                    child: const Icon(Icons.play_arrow,
+                        color: Color(0xFF00393E), size: 32),
                   ),
                 ),
                 Positioned(
@@ -1431,7 +1648,7 @@ class _EquipoContent extends StatelessWidget {
             style: GoogleFonts.newsreader(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
-                color: FaumaColors.primary)),
+                color: const Color(0xFF00393E))),
         const SizedBox(height: 16),
 
         // Grid 2x2
@@ -1484,7 +1701,7 @@ class _EquipoContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
+                color: const Color(0xFF101C2C).withValues(alpha: 0.06),
                 blurRadius: 40,
                 offset: const Offset(0, 12),
               ),
@@ -1507,8 +1724,8 @@ class _EquipoContent extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.biotech,
-                            size: 14, color: FaumaColors.secondary),
+                        const Icon(Icons.biotech,
+                            size: 14, color: Color(0xFF15686F)),
                         const SizedBox(width: 4),
                         Text('Laura Garc\u00EDa',
                             style: GoogleFonts.inter(
@@ -1533,64 +1750,68 @@ class _EquipoContent extends StatelessWidget {
         // Fishermen collaborators
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 160,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    FaumaImage(
-                        imageUrl: _equipoFishermanUrl, fit: BoxFit.cover),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            FaumaColors.primary.withValues(alpha: 0.8),
-                            Colors.transparent,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFFEFF4FF),
+            ),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 160,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      FaumaImage(
+                          imageUrl: _equipoFishermanUrl, fit: BoxFit.cover),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              const Color(0xFF00393E).withValues(alpha: 0.8),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 16,
+                        left: 16,
+                        right: 16,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('ALIANZA LOCAL',
+                                style: GoogleFonts.inter(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 2,
+                                    color: const Color(0xFFAEEDF4))),
+                            const SizedBox(height: 4),
+                            Text('12 pescadores colaboradores',
+                                style: GoogleFonts.newsreader(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white)),
                           ],
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 16,
-                      left: 16,
-                      right: 16,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('ALIANZA LOCAL',
-                              style: GoogleFonts.inter(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 2,
-                                  color: const Color(0xFFAEEDF4))),
-                          const SizedBox(height: 4),
-                          Text('12 pescadores colaboradores',
-                              style: GoogleFonts.newsreader(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white)),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                color: FaumaColors.surfaceContainerLow,
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'Pieza fundamental del proyecto. Los pescadores de la cofrad\u00EDa local recuperan los huevos de tibur\u00F3n que quedan atrapados en las redes de arrastre, d\u00E1ndoles una segunda oportunidad en nuestros laboratorios.',
-                  style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: const Color(0xFF3F4849),
-                      height: 1.7),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    'Pieza fundamental del proyecto. Los pescadores de la cofrad\u00EDa local recuperan los huevos de tibur\u00F3n que quedan atrapados en las redes de arrastre, d\u00E1ndoles una segunda oportunidad en nuestros laboratorios.',
+                    style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: const Color(0xFF3F4849),
+                        height: 1.7),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
 
@@ -1601,18 +1822,21 @@ class _EquipoContent extends StatelessWidget {
             style: GoogleFonts.newsreader(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
-                color: FaumaColors.primary)),
+                color: const Color(0xFF00393E))),
         const SizedBox(height: 16),
         _InstitutionRow(
-            icon: Icons.account_balance, name: 'Asociaci\u00F3n LAMNA',
+            icon: Icons.account_balance,
+            name: 'Asociaci\u00F3n LAMNA',
             subtitle: 'Research and coordination'),
         const SizedBox(height: 12),
         _InstitutionRow(
-            icon: Icons.water_drop, name: 'Fundaci\u00F3n Oceanogr\u00E0fic',
+            icon: Icons.water_drop,
+            name: 'Fundaci\u00F3n Oceanogr\u00E0fic',
             subtitle: 'Lab facilities and veterinary support'),
         const SizedBox(height: 12),
         _InstitutionRow(
-            icon: Icons.tsunami, name: 'Fundaci\u00F3n Azul Marino',
+            icon: Icons.tsunami,
+            name: 'Fundaci\u00F3n Azul Marino',
             subtitle: 'Field logistics and community outreach'),
 
         const SizedBox(height: 32),
@@ -1622,7 +1846,7 @@ class _EquipoContent extends StatelessWidget {
             style: GoogleFonts.newsreader(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
-                color: FaumaColors.primary)),
+                color: const Color(0xFF00393E))),
         const SizedBox(height: 16),
         SizedBox(
           height: 180,
@@ -1684,7 +1908,7 @@ class _TeamMemberCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: const Color(0xFF101C2C).withValues(alpha: 0.06),
             blurRadius: 40,
             offset: const Offset(0, 12),
           ),
@@ -1702,7 +1926,7 @@ class _TeamMemberCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          Icon(icon, size: 14, color: FaumaColors.secondary),
+          Icon(icon, size: 14, color: const Color(0xFF15686F)),
           const SizedBox(height: 4),
           Text(name,
               textAlign: TextAlign.center,
@@ -1754,10 +1978,10 @@ class _InstitutionRow extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: FaumaColors.surfaceContainerLow,
+              color: const Color(0xFFEFF4FF),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: FaumaColors.primary, size: 24),
+            child: Icon(icon, color: const Color(0xFF00393E), size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -1800,7 +2024,7 @@ class _EquipmentCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border:
-            Border(left: BorderSide(color: FaumaColors.primary, width: 4)),
+            const Border(left: BorderSide(color: Color(0xFF00393E), width: 4)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -1811,7 +2035,7 @@ class _EquipmentCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: FaumaColors.tertiary, size: 28),
+          Icon(icon, color: const Color(0xFF641614), size: 28),
           const SizedBox(height: 12),
           Text(title,
               style: GoogleFonts.inter(
@@ -1840,16 +2064,18 @@ class _ResultadosContent extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Campa\u00F1a 2024-2025',
-                style: GoogleFonts.newsreader(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: FaumaColors.primary)),
+            Expanded(
+              child: Text('Campa\u00F1a 2024-2025',
+                  style: GoogleFonts.newsreader(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF00393E))),
+            ),
             Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: FaumaColors.coralCta,
+                color: const Color(0xFFF4847A),
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Text('EN CURSO',
@@ -1892,7 +2118,7 @@ class _ResultadosContent extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: FaumaColors.surfaceContainerLow,
+            color: const Color(0xFFEFF4FF),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -1902,7 +2128,7 @@ class _ResultadosContent extends StatelessWidget {
                   style: GoogleFonts.newsreader(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: FaumaColors.primary)),
+                      color: const Color(0xFF00393E))),
               const SizedBox(height: 24),
               SizedBox(
                 height: 128,
@@ -1929,7 +2155,7 @@ class _ResultadosContent extends StatelessWidget {
             style: GoogleFonts.newsreader(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: FaumaColors.primary)),
+                color: const Color(0xFF00393E))),
         const SizedBox(height: 16),
         _ReleaseTimelineItem('15 Mar 2025', '32 juveniles \u2014 Malvarrosa'),
         _ReleaseTimelineItem('28 Feb 2025', '28 juveniles \u2014 El Saler'),
@@ -1941,8 +2167,15 @@ class _ResultadosContent extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: FaumaColors.primary,
+            color: const Color(0xFF005258),
             borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1968,14 +2201,14 @@ class _ResultadosContent extends StatelessWidget {
           onPressed: () {},
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            side: BorderSide(color: FaumaColors.primary, width: 2),
+            side: const BorderSide(color: Color(0xFF00393E), width: 2),
             shape: const StadiumBorder(),
           ),
           child: Text('DESCARGAR INFORME COMPLETO',
               style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: FaumaColors.primary,
+                  color: const Color(0xFF00393E),
                   letterSpacing: 2)),
         ),
       ],
@@ -2002,7 +2235,7 @@ class _MetricCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: FaumaColors.outlineVariant.withValues(alpha: 0.15)),
+            color: const Color(0xFFBFC8C9).withValues(alpha: 0.15)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -2013,13 +2246,13 @@ class _MetricCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: FaumaColors.primary, size: 28),
+          Icon(icon, color: const Color(0xFF00393E), size: 28),
           const SizedBox(height: 8),
           Text(value,
               style: GoogleFonts.inter(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: FaumaColors.primary)),
+                  color: const Color(0xFF00393E))),
           const SizedBox(height: 4),
           Text(label.toUpperCase(),
               textAlign: TextAlign.center,
@@ -2055,7 +2288,7 @@ class _BarColumn extends StatelessWidget {
                   heightFactor: fraction,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: FaumaColors.primary
+                      color: const Color(0xFF00393E)
                           .withValues(alpha: 0.2 + fraction * 0.8),
                       borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(4)),
@@ -2094,8 +2327,8 @@ class _ReleaseTimelineItem extends StatelessWidget {
             width: 12,
             height: 12,
             margin: const EdgeInsets.only(top: 2),
-            decoration: BoxDecoration(
-              color: FaumaColors.primary,
+            decoration: const BoxDecoration(
+              color: Color(0xFF00393E),
               shape: BoxShape.circle,
             ),
           ),
@@ -2118,10 +2351,11 @@ class _ReleaseTimelineItem extends StatelessWidget {
                       child: Text(description,
                           style: GoogleFonts.inter(
                               fontSize: 14,
-                              fontWeight: FontWeight.w600)),
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF101C2C))),
                     ),
-                    Icon(Icons.check_circle,
-                        size: 16, color: FaumaColors.secondary),
+                    const Icon(Icons.check_circle,
+                        size: 16, color: Color(0xFF15686F)),
                   ],
                 ),
               ],
@@ -2194,7 +2428,7 @@ class _CuriosidadesContent extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                  color: FaumaColors.outlineVariant.withValues(alpha: 0.15)),
+                  color: const Color(0xFFBFC8C9).withValues(alpha: 0.15)),
             ),
           ),
           child: Row(
@@ -2208,7 +2442,7 @@ class _CuriosidadesContent extends StatelessWidget {
                       border: Border(
                         bottom: BorderSide(
                           color: activeSubTab == 0
-                              ? FaumaColors.primary
+                              ? const Color(0xFF00393E)
                               : Colors.transparent,
                           width: 2,
                         ),
@@ -2223,7 +2457,7 @@ class _CuriosidadesContent extends StatelessWidget {
                             ? FontWeight.w600
                             : FontWeight.w500,
                         color: activeSubTab == 0
-                            ? FaumaColors.primary
+                            ? const Color(0xFF00393E)
                             : const Color(0xFF3F4849),
                       ),
                     ),
@@ -2239,7 +2473,7 @@ class _CuriosidadesContent extends StatelessWidget {
                       border: Border(
                         bottom: BorderSide(
                           color: activeSubTab == 1
-                              ? FaumaColors.primary
+                              ? const Color(0xFF00393E)
                               : Colors.transparent,
                           width: 2,
                         ),
@@ -2254,7 +2488,7 @@ class _CuriosidadesContent extends StatelessWidget {
                             ? FontWeight.w600
                             : FontWeight.w500,
                         color: activeSubTab == 1
-                            ? FaumaColors.primary
+                            ? const Color(0xFF00393E)
                             : const Color(0xFF3F4849),
                       ),
                     ),
@@ -2297,7 +2531,7 @@ class _SabiasQueList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
       itemCount: _facts.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
@@ -2306,7 +2540,7 @@ class _SabiasQueList extends StatelessWidget {
           return Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: FaumaColors.primaryContainer,
+              color: const Color(0xFF005258),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -2316,39 +2550,52 @@ class _SabiasQueList extends StatelessWidget {
                 ),
               ],
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text('${index + 1}',
-                        style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white)),
+                Positioned(
+                  right: -16,
+                  bottom: -16,
+                  child: Opacity(
+                    opacity: 0.1,
+                    child: Icon(Icons.biotech,
+                        size: 96, color: Colors.white),
                   ),
                 ),
-                const SizedBox(height: 12),
-                Text(_facts[index],
-                    style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        height: 1.3)),
-                const SizedBox(height: 12),
-                Container(
-                  height: 4,
-                  width: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFB4AC),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text('${index + 1}',
+                            style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(_facts[index],
+                        style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            height: 1.3)),
+                    const SizedBox(height: 12),
+                    Container(
+                      height: 4,
+                      width: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFDAD6),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -2364,7 +2611,7 @@ class _SabiasQueList extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
+                color: const Color(0xFF101C2C).withValues(alpha: 0.06),
                 blurRadius: 40,
                 offset: const Offset(0, 12),
               ),
@@ -2375,8 +2622,8 @@ class _SabiasQueList extends StatelessWidget {
               Container(
                 width: 32,
                 height: 32,
-                decoration: BoxDecoration(
-                  color: FaumaColors.primaryContainer,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF005258),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -2393,6 +2640,7 @@ class _SabiasQueList extends StatelessWidget {
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
+                        color: const Color(0xFF101C2C),
                         height: 1.3)),
               ),
               if (hasImage) ...[
@@ -2455,7 +2703,7 @@ class _MitosList extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
+                color: const Color(0xFF101C2C).withValues(alpha: 0.06),
                 blurRadius: 40,
                 offset: const Offset(0, 12),
               ),
@@ -2466,14 +2714,14 @@ class _MitosList extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.cancel,
-                      color: FaumaColors.tertiary, size: 20),
+                  const Icon(Icons.cancel,
+                      color: Color(0xFF641614), size: 20),
                   const SizedBox(width: 8),
                   Text('MITO',
                       style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: FaumaColors.tertiary,
+                          color: const Color(0xFF641614),
                           letterSpacing: 1.5)),
                 ],
               ),
@@ -2482,18 +2730,19 @@ class _MitosList extends StatelessWidget {
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      fontStyle: FontStyle.italic)),
+                      fontStyle: FontStyle.italic,
+                      color: const Color(0xFF101C2C))),
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Icon(Icons.check_circle,
-                      color: FaumaColors.primary, size: 20),
+                  const Icon(Icons.check_circle,
+                      color: Color(0xFF00393E), size: 20),
                   const SizedBox(width: 8),
                   Text('REALIDAD',
                       style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: FaumaColors.primary,
+                          color: const Color(0xFF00393E),
                           letterSpacing: 1.5)),
                 ],
               ),

@@ -54,6 +54,14 @@ const _vetDraElena =
     'https://lh3.googleusercontent.com/aida-public/AB6AXuBdhfrlIspCLu7H_6iqXpaatHHVLp9PmIAjTKkMhV2fA9XImGa9zf2jmGo-6OF9iZdO-hIXb0WVjNa6lGTXMaGcsXntoNQM2kAZHiiYavcjmiHrW-Rmo42t8ynSNsVS2sWO2a7yWZbD63WNt4OAYflydc0Nesm24kb0KE0FirWgOiiOv3_OwpUVWaAOUqVAntbA6vJCQuKjJi8QTrWmZp3mkoyJyDSRx-itaTyv3_eZfhouN4Q1zzTN0r_QJQoW9Ml-d5fbtBe1rYFv';
 const _vetTankImage =
     'https://lh3.googleusercontent.com/aida-public/AB6AXuCLZ8qhO4mReG5kjN7P09Lc42kDhufIRGhsa09y5ykrAz5XlTdfc3u_kH0x0AXK6yJsrzjhERX5M-GmJfXOwLB8fW4NSfa9xVrcNVid91RxxjC2cJAN18RJD_dnFLVxKvNuOjqTlCHrnirdQ5pElPZWd2PbrMtqXjU7HEpE5W3lNnxAUXcFRVYiucCmh0jjRL4yO16rJD16wGOO7iwFyov3Y5GojyJPMzLOnKCh3N9FI5njvuYVl672SvMvS36YcEKxYHloUeMfbof3';
+const _vetProfileImage =
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuANsFpqtjBB9mAjk2LGFC-Kp6qwalYtCxjM20Kj7SLlLAUlP6JgSwjfnQGwRkOQJdkqUsFcw_aS4xVcCqFR3DeoD4xJ-vSwegmThpZxxWsrGyoB1w0HewV--WM4SibJEFwauAXOsByUmlvyprqbvKdNfAsKjAIT6KIQVa_36pn5v6gqGoWs3k4K8lN3tWNx2Se7pmyt2lq5DROzRkjqiMgBwm2HWqX4cfosTCpCwCDcm2UeeiZ83BFYLwJbO8j8NMV5DMn0oUIf5g5l';
+
+// ── Color constants not in FaumaColors ─────────────────────────────
+const _surfaceContainer = Color(0xFFF3EDE7);
+const _surfaceContainerHigh = Color(0xFFEEE7E1);
+const _onSecondaryContainer = Color(0xFF596577);
+const _errorColor = Color(0xFFBA1A1A);
 
 /// Subscriber-level species detail screen.
 ///
@@ -84,13 +92,14 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
   int _saludTab = 0;
 
   // Ficha tecnica accordion open states
-  final List<bool> _fichaSections = [true, false, false, false, false, false, false];
+  final List<bool> _fichaSections =
+      [true, false, false, false, false, false, false];
 
   final ScrollController _scrollController = ScrollController();
 
   static const _sectionLabels = [
-    'Ficha Tecnica',
-    'Galeria',
+    'Ficha T\u00e9cnica',
+    'Galer\u00eda',
     'Curiosidades',
     'Diario de Salud',
   ];
@@ -116,7 +125,12 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
             pinned: true,
             delegate: _BotoneraDelegate(
               selectedIndex: _selectedSection,
-              onSelected: (i) => setState(() => _selectedSection = i),
+              onSelected: (i) => setState(() {
+                _selectedSection = i;
+                _galleryFilter = 0;
+                _curiosidadesTab = 0;
+                _saludTab = 0;
+              }),
               labels: _sectionLabels,
             ),
           ),
@@ -152,11 +166,11 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0x1A000000),
+                  Color(0x33000000),
                   Colors.transparent,
-                  Color(0xFFFFF8F2),
+                  Color(0xCC000000),
                 ],
-                stops: [0.0, 0.4, 1.0],
+                stops: [0.0, 0.35, 1.0],
               ),
             ),
           ),
@@ -200,10 +214,11 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
 
           // Subscriber badge
           Positioned(
-            bottom: 80,
+            bottom: 64,
             right: 24,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: FaumaColors.primaryContainer,
                 borderRadius: BorderRadius.circular(999),
@@ -234,54 +249,33 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
             ),
           ),
 
-          // Title overlay card
+          // Species name overlay at bottom of hero
           Positioned(
-            bottom: 0,
+            bottom: 16,
             left: 24,
             right: 24,
-            child: Transform.translate(
-              offset: const Offset(0, 28),
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.8),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Caretta caretta',
+                  style: GoogleFonts.newsreader(
+                    fontSize: 14,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x0D000000),
-                      blurRadius: 16,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ficha Tecnica \u2014 Caretta caretta',
-                      style: GoogleFonts.newsreader(
-                        fontSize: 28,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w400,
-                        color: FaumaColors.primary,
-                        height: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Explora la vida de la tortuga boba, una de las navegantes mas antiguas de nuestros oceanos.',
-                      style: GoogleFonts.inter(
-                        fontSize: 13,
-                        color: const Color(0xFF596577),
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 4),
+                Text(
+                  'Tortuga Boba',
+                  style: GoogleFonts.newsreader(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    height: 1.1,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ],
@@ -309,7 +303,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // SECTION 0: FICHA TECNICA
+  // SECTION 0: FICHA TECNICA (screen 26)
   // ═══════════════════════════════════════════════════════════════════════════
 
   Widget _buildFichaTecnica() {
@@ -320,27 +314,27 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
           // 1. Taxonomia
           _buildAccordion(
             index: 0,
-            title: '1. Taxonomia',
+            title: '1. Taxonom\u00eda',
             color: FaumaColors.primary,
-            child: _buildTaxonomia(),
+            child: _buildTaxonomiaContent(),
           ),
           const SizedBox(height: 12),
 
           // 2. Biometria
           _buildAccordion(
             index: 1,
-            title: '2. Biometria',
+            title: '2. Biometr\u00eda',
             color: FaumaColors.primary,
-            child: _buildBiometria(),
+            child: _buildBiometriaContent(),
           ),
           const SizedBox(height: 12),
 
           // 3. Ecologia
           _buildAccordion(
             index: 2,
-            title: '3. Ecologia',
+            title: '3. Ecolog\u00eda',
             color: FaumaColors.primary,
-            child: _buildEcologia(),
+            child: _buildEcologiaContent(),
           ),
           const SizedBox(height: 12),
 
@@ -349,25 +343,25 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
             index: 3,
             title: '4. Comportamiento',
             color: FaumaColors.primary,
-            child: _buildComportamiento(),
+            child: _buildComportamientoContent(),
           ),
           const SizedBox(height: 12),
 
           // 5. Alimentacion
           _buildAccordion(
             index: 4,
-            title: '5. Alimentacion',
+            title: '5. Alimentaci\u00f3n',
             color: FaumaColors.primary,
-            child: _buildAlimentacion(),
+            child: _buildAlimentacionContent(),
           ),
           const SizedBox(height: 12),
 
           // 6. Reproduccion
           _buildAccordion(
             index: 5,
-            title: '6. Reproduccion',
+            title: '6. Reproducci\u00f3n',
             color: FaumaColors.primary,
-            child: _buildReproduccion(),
+            child: _buildReproduccionContent(),
           ),
           const SizedBox(height: 12),
 
@@ -377,33 +371,56 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
             title: '7. Amenazas',
             color: FaumaColors.tertiary,
             bgColor: FaumaColors.tertiary.withValues(alpha: 0.05),
-            child: _buildAmenazas(),
+            child: _buildAmenazasContent(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTaxonomia() {
+  Widget _buildTaxonomiaContent() {
     return Column(
       children: [
         Row(
           children: [
-            Expanded(child: _buildDataField('Nombre Comun', 'Tortuga boba')),
-            Expanded(child: _buildDataField('Familia', 'Cheloniidae')),
+            Expanded(
+              child: _buildTaxField('Nombre Com\u00fan', 'Tortuga boba'),
+            ),
+            Expanded(
+              child: _buildTaxField('Familia', 'Cheloniidae'),
+            ),
           ],
         ),
         const SizedBox(height: 16),
         Row(
           children: [
-            Expanded(child: _buildDataField('Linaje', '100M years')),
             Expanded(
-              child: _buildDataField(
-                'Estatus IUCN',
-                'Vulnerable',
-                valueColor: FaumaColors.tertiary,
-                isItalic: true,
-                isBold: true,
+              child: _buildTaxField('Linaje', '100M years'),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'ESTATUS IUCN',
+                    style: GoogleFonts.inter(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: FaumaColors.secondary,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Vulnerable',
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.italic,
+                      color: FaumaColors.tertiary,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -412,9 +429,36 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     );
   }
 
-  Widget _buildBiometria() {
+  Widget _buildTaxField(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: GoogleFonts.inter(
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            color: FaumaColors.secondary,
+            letterSpacing: 1.2,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: FaumaColors.onSurface,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBiometriaContent() {
     return Column(
       children: [
+        // Length row with icon
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -423,13 +467,13 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
           ),
           child: Row(
             children: [
-              const Icon(Icons.straighten, color: FaumaColors.primary),
+              Icon(Icons.straighten, color: FaumaColors.primary, size: 24),
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Longitud Caparazon',
+                    'Longitud Caparaz\u00f3n',
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -473,7 +517,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                     Text(
                       '100 - 150 kg',
                       style: GoogleFonts.inter(
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: FaumaColors.onSurface,
                       ),
@@ -502,9 +546,9 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                       ),
                     ),
                     Text(
-                      '70 - 80 anos',
+                      '70 - 80 a\u00f1os',
                       style: GoogleFonts.inter(
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: FaumaColors.onSurface,
                       ),
@@ -519,20 +563,21 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     );
   }
 
-  Widget _buildEcologia() {
+  Widget _buildEcologiaContent() {
     return Text(
-      '"Habita en practicamente todos los oceanos del mundo. Son consideradas guardianas del mar y autenticas islas flotantes de vida, albergando docenas de especies comensales en su caparazon."',
+      '\u201CHabita en pr\u00e1cticamente todos los oc\u00e9anos del mundo. Son consideradas guardianas del mar y aut\u00e9nticas islas flotantes de vida, albergando docenas de especies comensales en su caparaz\u00f3n.\u201D',
       style: GoogleFonts.inter(
-        fontSize: 16,
+        fontSize: 15,
         fontStyle: FontStyle.italic,
-        color: const Color(0xFF596577),
+        color: _onSecondaryContainer,
         height: 1.6,
       ),
     );
   }
 
-  Widget _buildComportamiento() {
+  Widget _buildComportamientoContent() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -541,10 +586,11 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
                 color: FaumaColors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.explore, color: FaumaColors.primary),
+              child: Icon(Icons.explore,
+                  color: FaumaColors.primary, size: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -552,20 +598,20 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'NAVEGACION GPS',
+                    'NAVEGACI\u00d3N GPS',
                     style: GoogleFonts.inter(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: FaumaColors.primary,
-                      letterSpacing: 1,
+                      letterSpacing: 0.8,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Utilizan un sofisticado sistema de navegacion basado en el campo magnetico terrestre para regresar a su playa de nacimiento (filopatria natal).',
+                    'Utilizan un sofisticado sistema de navegaci\u00f3n basado en el campo magn\u00e9tico terrestre para regresar a su playa de nacimiento (filopatr\u00eda natal).',
                     style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: const Color(0xFF596577),
+                      fontSize: 13,
+                      color: _onSecondaryContainer,
                       height: 1.5,
                     ),
                   ),
@@ -576,21 +622,24 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
         ),
         const SizedBox(height: 16),
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-          decoration: const BoxDecoration(
+          padding: const EdgeInsets.only(left: 16),
+          decoration: BoxDecoration(
             border: Border(
               left: BorderSide(
-                color: Color(0x33005258),
+                color: FaumaColors.primary.withValues(alpha: 0.2),
                 width: 2,
               ),
             ),
           ),
-          child: Text(
-            'Es una especie eminentemente solitaria durante la mayor parte de su ciclo vital.',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: const Color(0xFF596577),
-              height: 1.5,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Text(
+              'Es una especie eminentemente solitaria durante la mayor parte de su ciclo vital.',
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                color: _onSecondaryContainer,
+                height: 1.5,
+              ),
             ),
           ),
         ),
@@ -598,7 +647,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     );
   }
 
-  Widget _buildAlimentacion() {
+  Widget _buildAlimentacionContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -609,26 +658,54 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            'Dieta principalmente carnivora.',
+            'Dieta principalmente carn\u00edvora.',
             style: GoogleFonts.inter(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w500,
               color: FaumaColors.primary,
             ),
           ),
         ),
         const SizedBox(height: 16),
-        _buildBullet('Presas principales: cangrejos, moluscos y medusas.'),
+        _buildBulletItem(
+            'Presas principales: cangrejos, moluscos y medusas.'),
         const SizedBox(height: 8),
-        _buildBullet(
-          'Consumo diario: 1.5 - 3% de su peso corporal.',
+        _buildBulletItem(
+            'Consumo diario: 1.5 - 3% de su peso corporal.'),
+      ],
+    );
+  }
+
+  Widget _buildBulletItem(String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: 6,
+          height: 6,
+          decoration: BoxDecoration(
+            color: FaumaColors.tertiary,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              color: _onSecondaryContainer,
+              height: 1.5,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildReproduccion() {
+  Widget _buildReproduccionContent() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
@@ -636,7 +713,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3EDE7),
+                  color: _surfaceContainer,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -655,7 +732,6 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         color: FaumaColors.secondary,
-                        letterSpacing: 0.5,
                       ),
                     ),
                   ],
@@ -667,13 +743,13 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3EDE7),
+                  color: _surfaceContainer,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
                   children: [
                     Text(
-                      '29\u00B0C',
+                      '29\u00b0C',
                       style: GoogleFonts.newsreader(
                         fontSize: 24,
                         fontStyle: FontStyle.italic,
@@ -681,12 +757,11 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                       ),
                     ),
                     Text(
-                      'T\u00AA DETERMINACION SEXO',
+                      'T\u00aa DETERMINACI\u00d3N SEXO',
                       style: GoogleFonts.inter(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         color: FaumaColors.secondary,
-                        letterSpacing: 0.5,
                       ),
                     ),
                   ],
@@ -695,30 +770,30 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         RichText(
           text: TextSpan(
             style: GoogleFonts.inter(
-              fontSize: 14,
-              color: const Color(0xFF596577),
+              fontSize: 13,
+              color: _onSecondaryContainer,
               height: 1.6,
             ),
             children: [
               const TextSpan(
                 text:
-                    'Alcanzan la madurez sexual tardiamente, entre los ',
+                    'Alcanzan la madurez sexual tard\u00edamente, entre los ',
               ),
               TextSpan(
-                text: '20 y 35 anos',
+                text: '20 y 35 a\u00f1os',
                 style: GoogleFonts.inter(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: FaumaColors.primary,
                 ),
               ),
               const TextSpan(
                 text:
-                    '. El sexo de las crias se determina por la temperatura de la arena durante la incubacion (TSD).',
+                    '. El sexo de las cr\u00edas se determina por la temperatura de la arena durante la incubaci\u00f3n (TSD).',
               ),
             ],
           ),
@@ -727,32 +802,60 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     );
   }
 
-  Widget _buildAmenazas() {
+  Widget _buildAmenazasContent() {
     return Column(
       children: [
         _buildThreatRow(
-          Icons.home_work,
+          Icons.emergency,
           'Pesca accidental:',
           'El palangre y las redes de arrastre son su mayor peligro en mar abierto.',
         ),
         const SizedBox(height: 16),
         _buildThreatRow(
           Icons.delete_outline,
-          'Contaminacion:',
-          'Confunden plasticos con medusas, causando bloqueos digestivos fatales.',
+          'Contaminaci\u00f3n:',
+          'Confunden pl\u00e1sticos con medusas, causando bloqueos digestivos fatales.',
         ),
         const SizedBox(height: 16),
         _buildThreatRow(
           Icons.thermostat,
-          'Cambio Climatico:',
-          'El aumento de temperatura en las playas altera la proporcion de sexos, naciendo casi exclusivamente hembras.',
+          'Cambio Clim\u00e1tico:',
+          'El aumento de temperatura en las playas altera la proporci\u00f3n de sexos, naciendo casi exclusivamente hembras.',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildThreatRow(IconData icon, String boldText, String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: FaumaColors.tertiary, size: 24),
+        const SizedBox(width: 16),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                color: _onSecondaryContainer,
+                height: 1.5,
+              ),
+              children: [
+                TextSpan(
+                  text: boldText,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                TextSpan(text: ' $text'),
+              ],
+            ),
+          ),
         ),
       ],
     );
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // SECTION 1: GALERIA
+  // SECTION 1: GALERIA (screen 27)
   // ═══════════════════════════════════════════════════════════════════════════
 
   Widget _buildGaleria() {
@@ -770,11 +873,11 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                 const SizedBox(width: 8),
                 _buildFilterChip(1, 'Fotos'),
                 const SizedBox(width: 8),
-                _buildFilterChip(2, 'Videos'),
+                _buildFilterChip(2, 'V\u00eddeos'),
                 const SizedBox(width: 8),
-                _buildFilterChip(3, 'Acompananos'),
+                _buildFilterChip(3, 'Acomp\u00e1\u00f1anos'),
                 const SizedBox(width: 8),
-                _buildFilterChipLive(4, 'Camara 24h'),
+                _buildFilterChipLive(4, 'C\u00e1mara 24h'),
               ],
             ),
           ),
@@ -874,7 +977,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Documental: Un dia con la tortuga boba',
+                    'Documental: Un d\u00eda con la tortuga boba',
                     style: GoogleFonts.newsreader(
                       fontSize: 22,
                       color: Colors.white,
@@ -883,12 +986,13 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.schedule, color: Colors.white70, size: 14),
+                      const Icon(Icons.schedule,
+                          color: Colors.white70, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         '12:34',
                         style: GoogleFonts.inter(
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: Colors.white70,
                         ),
@@ -913,36 +1017,73 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
       _galleryPhoto5,
       _galleryPhoto6,
     ];
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.8,
-      ),
-      itemCount: photos.length,
-      itemBuilder: (context, i) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: FaumaImage(imageUrl: photos[i], fit: BoxFit.cover),
-        );
-      },
+
+    // Two-column masonry-like layout
+    final leftCol = <String>[];
+    final rightCol = <String>[];
+    for (var i = 0; i < photos.length; i++) {
+      if (i.isEven) {
+        leftCol.add(photos[i]);
+      } else {
+        rightCol.add(photos[i]);
+      }
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            children: leftCol
+                .map((url) => Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: FaumaImage(imageUrl: url, fit: BoxFit.cover),
+                      ),
+                    ))
+                .toList(),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            children: rightCol
+                .map((url) => Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: FaumaImage(imageUrl: url, fit: BoxFit.cover),
+                      ),
+                    ))
+                .toList(),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildAcompananos() {
     return Container(
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        gradient: const LinearGradient(
-          colors: [FaumaColors.primary, Color(0xFF8BD2DA)],
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
+          colors: [
+            FaumaColors.primary,
+            const Color(0xFF80CBC4),
+          ],
         ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x33000000),
+            blurRadius: 12,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(3),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -951,6 +1092,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Image with play button
             AspectRatio(
               aspectRatio: 16 / 9,
               child: Stack(
@@ -958,12 +1100,9 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(10),
-                    ),
+                        top: Radius.circular(10)),
                     child: FaumaImage(
-                      imageUrl: _galleryAcompananos,
-                      fit: BoxFit.cover,
-                    ),
+                        imageUrl: _galleryAcompananos, fit: BoxFit.cover),
                   ),
                   Center(
                     child: Container(
@@ -973,18 +1112,15 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                         color: FaumaColors.primary.withValues(alpha: 0.8),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        Icons.play_arrow,
-                        color: Colors.white,
-                        size: 28,
-                      ),
+                      child: const Icon(Icons.play_arrow,
+                          color: Colors.white, size: 28),
                     ),
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -994,23 +1130,23 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       color: FaumaColors.tertiary,
-                      letterSpacing: -0.3,
+                      letterSpacing: -0.2,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Acompananos: Un dia en el centro de recuperacion',
+                    'Acomp\u00e1\u00f1anos: Un d\u00eda en el centro de recuperaci\u00f3n',
                     style: GoogleFonts.newsreader(
                       fontSize: 20,
                       color: FaumaColors.primary,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Text(
-                    'Descubre el trabajo diario de nuestros biologos cuidando de los ejemplares rescatados este mes.',
+                    'Descubre el trabajo diario de nuestros bi\u00f3logos cuidando de los ejemplares rescatados este mes.',
                     style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: const Color(0xFF3F484A),
+                      fontSize: 13,
+                      color: FaumaColors.onSurfaceVariant,
                       height: 1.5,
                     ),
                     maxLines: 2,
@@ -1041,9 +1177,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
               child: Opacity(
                 opacity: 0.4,
                 child: FaumaImage(
-                  imageUrl: _galleryCamara24h,
-                  fit: BoxFit.cover,
-                ),
+                    imageUrl: _galleryCamara24h, fit: BoxFit.cover),
               ),
             ),
             // Live badge
@@ -1051,13 +1185,13 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
               top: 16,
               left: 16,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(999),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
-                  ),
+                      color: Colors.white.withValues(alpha: 0.1)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -1077,7 +1211,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
-                        letterSpacing: 2,
+                        letterSpacing: 1.2,
                       ),
                     ),
                   ],
@@ -1085,52 +1219,57 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
               ),
             ),
             // Lock overlay
-            Container(color: Colors.black.withValues(alpha: 0.5)),
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.lock, color: Colors.white, size: 48),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Tanque de rehabilitacion',
-                    style: GoogleFonts.newsreader(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: FaumaColors.tertiary,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.workspace_premium,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Disponible en nivel Heroe',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.5),
               ),
+            ),
+            // Lock content
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.lock, color: Colors.white, size: 48),
+                const SizedBox(height: 16),
+                Text(
+                  'Tanque de rehabilitaci\u00f3n',
+                  style: GoogleFonts.newsreader(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: FaumaColors.tertiaryContainer,
+                    borderRadius: BorderRadius.circular(999),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x33000000),
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.workspace_premium,
+                          color: Colors.white, size: 14),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Disponible en nivel H\u00e9roe',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -1139,7 +1278,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // SECTION 2: CURIOSIDADES
+  // SECTION 2: CURIOSIDADES (screens 28-31)
   // ═══════════════════════════════════════════════════════════════════════════
 
   Widget _buildCuriosidades() {
@@ -1149,77 +1288,459 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Sub-tabs
-          _buildSubTabs(
-            labels: ['Ciclo de Vida', 'Sabias que', 'Mitos', 'Preguntas'],
-            selectedIndex: _curiosidadesTab,
-            onSelected: (i) => setState(() => _curiosidadesTab = i),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildSubTab(0, 'Ciclo de Vida', _curiosidadesTab,
+                    (i) => setState(() => _curiosidadesTab = i)),
+                const SizedBox(width: 8),
+                _buildSubTab(1, 'Sab\u00edas qu\u00e9', _curiosidadesTab,
+                    (i) => setState(() => _curiosidadesTab = i)),
+                const SizedBox(width: 8),
+                _buildSubTab(2, 'Mitos', _curiosidadesTab,
+                    (i) => setState(() => _curiosidadesTab = i)),
+                const SizedBox(width: 8),
+                _buildSubTab(3, 'Preguntas', _curiosidadesTab,
+                    (i) => setState(() => _curiosidadesTab = i)),
+              ],
+            ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
+          const Divider(color: _surfaceContainerHigh),
+          const SizedBox(height: 16),
 
-          // Sub-content
+          // Content
           if (_curiosidadesTab == 0) _buildCicloDeVida(),
           if (_curiosidadesTab == 1) _buildSabiasQue(),
-          if (_curiosidadesTab == 2) _buildMitos(),
+          if (_curiosidadesTab == 2) _buildMitosRealidad(),
           if (_curiosidadesTab == 3) _buildPreguntas(),
         ],
       ),
     );
   }
 
-  // ── Ciclo de Vida ──
+  // ── Ciclo de Vida (screen 28) ──────────────────────────────────────────
+
   Widget _buildCicloDeVida() {
-    return Column(
+    return Stack(
       children: [
-        _buildTimelineEntry(
-          month: 'ENE',
-          title: 'El Letargo Metabolico',
-          body:
-              'Su corazon late apenas 6 veces por minuto mientras descansa en el fondo marino para conservar energia.',
-          isHighlighted: false,
+        // Vertical timeline line
+        Positioned(
+          left: 16,
+          top: 0,
+          bottom: 0,
+          child: Container(
+            width: 1,
+            decoration: BoxDecoration(
+              color: FaumaColors.primaryContainer.withValues(alpha: 0.4),
+            ),
+          ),
         ),
-        _buildTimelineSpacer('FEB'),
-        _buildTimelineEntry(
-          month: 'MAR',
-          title: 'El Encendido Solar',
-          body:
-              'Emergen a la superficie para el basking. El sol activa la sintesis de vitamina D3 y marca el despertar biologico antes de la migracion.',
-          isHighlighted: true,
-          imageUrl: _cicloVidaMarzo,
-        ),
-        _buildTimelineEntry(
-          month: 'JUN',
-          title: 'El Maraton de la Playa',
-          body:
-              'Las hembras regresan a su playa de nacimiento para depositar entre 80 y 120 huevos bajo la arena calida.',
-          isHighlighted: false,
-          badge: 'ANIDACION',
-        ),
-        _buildTimelineEntry(
-          month: 'AGO',
-          title: 'La Carrera por la Vida',
-          body:
-              'Nacimientos masivos. La facilitacion social permite que las crias salgan del nido juntas, aumentando su probabilidad de supervivencia.',
-          isHighlighted: false,
-          hasAvatars: true,
-        ),
-        _buildTimelineEntry(
-          month: 'DIC',
-          title: 'El Arrecife Viviente',
-          body:
-              'Su caparazon actua como una isla movil para epibiontes; crustaceos y algas viajan miles de kilometros con ella.',
-          isHighlighted: false,
-          isLast: true,
+        Column(
+          children: [
+            _buildTimelineEntry(
+              month: 'ENE',
+              title: 'El Letargo Metab\u00f3lico',
+              description:
+                  'Su coraz\u00f3n late apenas 6 veces por minuto mientras descansa en el fondo marino para conservar energ\u00eda.',
+              isHighlighted: false,
+            ),
+            const SizedBox(height: 24),
+            // FEB placeholder
+            _buildTimelinePlaceholder('FEB'),
+            const SizedBox(height: 24),
+            _buildTimelineEntryHighlighted(
+              month: 'MAR',
+              title: 'El Encendido Solar',
+              description:
+                  'Emergen a la superficie para el basking. El sol activa la s\u00edntesis de vitamina D3 y marca el despertar biol\u00f3gico antes de la migraci\u00f3n.',
+              imageUrl: _cicloVidaMarzo,
+            ),
+            const SizedBox(height: 24),
+            _buildTimelineEntry(
+              month: 'JUN',
+              title: 'El Marat\u00f3n de la Playa',
+              description:
+                  'Las hembras regresan a su playa de nacimiento para depositar entre 80 y 120 huevos bajo la arena c\u00e1lida.',
+              badge: 'ANIDACI\u00d3N',
+            ),
+            const SizedBox(height: 24),
+            _buildTimelineEntryWithAvatars(
+              month: 'AGO',
+              title: 'La Carrera por la Vida',
+              description:
+                  'Nacimientos masivos. La facilitaci\u00f3n social permite que las cr\u00edas salgan del nido juntas, aumentando su probabilidad de supervivencia.',
+            ),
+            const SizedBox(height: 24),
+            _buildTimelineEntry(
+              month: 'DIC',
+              title: 'El Arrecife Viviente',
+              description:
+                  'Su caparaz\u00f3n act\u00faa como una isla m\u00f3vil para epibiontes; crust\u00e1ceos y algas viajan miles de kil\u00f3metros con ella.',
+            ),
+          ],
         ),
       ],
     );
   }
 
-  // ── Sabias que ──
+  Widget _buildTimelineEntry({
+    required String month,
+    required String title,
+    required String description,
+    bool isHighlighted = false,
+    String? badge,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 32,
+          child: Text(
+            month,
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: FaumaColors.secondary,
+              letterSpacing: 1.2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(width: 24),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: _surfaceContainerHigh),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x08000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (badge != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: FaumaColors.primary,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color:
+                              FaumaColors.tertiary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          badge,
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: FaumaColors.tertiary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Text(
+                    title,
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: FaumaColors.primary,
+                    ),
+                  ),
+                const SizedBox(height: 8),
+                Text(
+                  description,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    color: FaumaColors.onSurfaceVariant,
+                    height: 1.6,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimelinePlaceholder(String month) {
+    return Opacity(
+      opacity: 0.5,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 32,
+            child: Text(
+              month,
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: FaumaColors.secondary,
+                letterSpacing: 1.2,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 24),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Container(
+                height: 1,
+                color: _surfaceContainerHigh,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimelineEntryHighlighted({
+    required String month,
+    required String title,
+    required String description,
+    required String imageUrl,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 32,
+          child: Column(
+            children: [
+              Text(
+                month,
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  color: FaumaColors.primaryContainer,
+                  letterSpacing: 1.2,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: FaumaColors.tertiary,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 24),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: FaumaColors.surface,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                  color: FaumaColors.primaryContainer, width: 2),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x15000000),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.wb_sunny,
+                        color: FaumaColors.tertiary, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      title,
+                      style: GoogleFonts.inter(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: FaumaColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                RichText(
+                  text: TextSpan(
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: FaumaColors.onSurface,
+                      height: 1.6,
+                    ),
+                    children: [
+                      const TextSpan(
+                          text:
+                              'Emergen a la superficie para el '),
+                      TextSpan(
+                        text: 'basking',
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontStyle: FontStyle.italic,
+                          color: FaumaColors.primary,
+                        ),
+                      ),
+                      const TextSpan(
+                        text:
+                            '. El sol activa la s\u00edntesis de vitamina D3 y marca el despertar biol\u00f3gico antes de la migraci\u00f3n.',
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: FaumaImage(
+                        imageUrl: imageUrl, fit: BoxFit.cover),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimelineEntryWithAvatars({
+    required String month,
+    required String title,
+    required String description,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 32,
+          child: Text(
+            month,
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: FaumaColors.secondary,
+              letterSpacing: 1.2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(width: 24),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border(
+                top: BorderSide(color: _surfaceContainerHigh),
+                right: BorderSide(color: _surfaceContainerHigh),
+                bottom: BorderSide(color: _surfaceContainerHigh),
+                left:
+                    BorderSide(color: FaumaColors.tertiary, width: 4),
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x08000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: FaumaColors.primary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  description,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    color: FaumaColors.onSurfaceVariant,
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Small avatar stack
+                SizedBox(
+                  height: 32,
+                  child: Stack(
+                    children: [
+                      _buildSmallAvatar(_cicloVidaAgosto1, 0),
+                      _buildSmallAvatar(_cicloVidaAgosto2, 20),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSmallAvatar(String url, double left) {
+    return Positioned(
+      left: left,
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 2),
+        ),
+        child: ClipOval(
+          child: FaumaImage(imageUrl: url, fit: BoxFit.cover),
+        ),
+      ),
+    );
+  }
+
+  // ── Sabias Que (screen 29) ─────────────────────────────────────────────
+
   Widget _buildSabiasQue() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Enero section
+        // Enero expanded
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1232,7 +1753,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                 color: FaumaColors.primary,
               ),
             ),
-            const Icon(Icons.expand_less, color: FaumaColors.primary),
+            Icon(Icons.expand_less, color: FaumaColors.primary),
           ],
         ),
         const SizedBox(height: 16),
@@ -1241,32 +1762,35 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
         _buildSabiasQueCard(
           icon: Icons.public,
           title:
-              'Sabias que el Mediterraneo es un albergue internacional para las tortugas?',
+              '\u00bfSab\u00edas que el Mediterr\u00e1neo es un albergue internacional para las tortugas?',
           body:
-              'Las \'Locales\' del Este (Grecia, Turquia) y las \'Turistas\' Atlanticas (Florida, Cabo Verde) conviven aqui durante el invierno, compartiendo areas de alimentacion.',
+              'Las \'Locales\' del Este (Grecia, Turqu\u00eda) y las \'Turistas\' Atl\u00e1nticas (Florida, Cabo Verde) conviven aqu\u00ed durante el invierno, compartiendo \u00e1reas de alimentaci\u00f3n.',
         ),
         const SizedBox(height: 16),
 
         // Card 2
         _buildSabiasQueCard(
-          icon: Icons.science,
+          icon: Icons.biotech,
           title:
-              'Sabias que llevan su pasaporte y diario de viaje grabados en el cuerpo?',
+              '\u00bfSab\u00edas que llevan su pasaporte y diario de viaje grabados en el cuerpo?',
           body:
-              'Su ADN mitocondrial funciona como un codigo de barras de origen, mientras que los isotopos estables en su caparazon revelan las rutas migratorias que han seguido.',
+              'Su ADN mitocondrial funciona como un c\u00f3digo de barras de origen, mientras que los is\u00f3topos estables en su caparaz\u00f3n revelan las rutas migratorias que han seguido.',
         ),
-        const SizedBox(height: 24),
 
-        const Divider(color: Color(0x33BEC8C9)),
+        const SizedBox(height: 24),
+        const Divider(color: FaumaColors.outlineVariant),
         const SizedBox(height: 8),
 
         // Collapsed months
         _buildCollapsedMonth('Febrero'),
+        const SizedBox(height: 8),
         _buildCollapsedMonth('Marzo'),
+        const SizedBox(height: 8),
         _buildCollapsedMonth('Abril'),
 
-        // Decorative image
         const SizedBox(height: 32),
+
+        // Decorative image
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: SizedBox(
@@ -1275,7 +1799,8 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                FaumaImage(imageUrl: _sabiasQueImage, fit: BoxFit.cover),
+                FaumaImage(
+                    imageUrl: _sabiasQueImage, fit: BoxFit.cover),
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -1308,12 +1833,112 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     );
   }
 
-  // ── Mitos y Realidad ──
-  Widget _buildMitos() {
+  Widget _buildSabiasQueCard({
+    required IconData icon,
+    required String title,
+    required String body,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: _surfaceContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: FaumaColors.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child:
+                    Icon(icon, color: FaumaColors.primary, size: 24),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.newsreader(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: FaumaColors.onSurface,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            body,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              color: FaumaColors.onSurfaceVariant,
+              height: 1.6,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: FaumaColors.coralCta,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.share, color: Colors.white, size: 14),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Compartir',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCollapsedMonth(String month) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          month,
+          style: GoogleFonts.newsreader(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
+            color: FaumaColors.secondary,
+          ),
+        ),
+        Icon(Icons.expand_more, color: FaumaColors.secondary),
+      ],
+    );
+  }
+
+  // ── Mitos y Realidad (screen 30) ────────────────────────────────────────
+
+  Widget _buildMitosRealidad() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Enero section
+        // Enero expanded
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1326,28 +1951,31 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                 color: FaumaColors.primary,
               ),
             ),
-            const Icon(Icons.expand_less, color: FaumaColors.primary),
+            Icon(Icons.expand_less, color: FaumaColors.primary),
           ],
         ),
         const SizedBox(height: 16),
 
-        // Myth 1
+        // Myth Card 1
         _buildMythCard(
-          title: 'Hibernan durante todo el invierno?',
-          myth: '"Hibernan en el fango marino."',
+          title: '\u00bfHibernan durante todo el invierno?',
+          myth: '\u201CHibernan en el fango marino.\u201D',
           reality:
-              'No hibernan, entran en quiescencia. Migran a aguas mas calidas para mantener su metabolismo.',
+              'No hibernan, entran en quiescencia. Migran a aguas m\u00e1s c\u00e1lidas para mantener su metabolismo.',
         ),
         const SizedBox(height: 24),
 
-        // Myth 2
+        // Myth Card 2
         _buildMythCard(
-          title: 'Pueden esconder la cabeza dentro del caparazon?',
-          myth: '"Se esconden como las tortugas terrestres."',
+          title:
+              '\u00bfPueden esconder la cabeza dentro del caparaz\u00f3n?',
+          myth:
+              '\u201CSe esconden como las tortugas terrestres.\u201D',
           reality:
-              'Sus aletas son rigidas y no hay espacio interno. Han desarrollado una defensa activa y gran agilidad en el agua.',
+              'Sus aletas son r\u00edgidas y no hay espacio interno. Han desarrollado una defensa activa y gran agilidad en el agua.',
         ),
-        const SizedBox(height: 24),
+
+        const SizedBox(height: 32),
 
         // Collapsed months
         _buildCollapsedMonthCard('Febrero'),
@@ -1356,41 +1984,42 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
         const SizedBox(height: 12),
         _buildCollapsedMonthCard('Abril'),
 
-        // Info card
         const SizedBox(height: 32),
+
+        // Info banner
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: FaumaColors.coralCta.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: const Border(
+            border: Border(
               left: BorderSide(color: FaumaColors.coralCta, width: 4),
             ),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.info, color: FaumaColors.coralCta),
+              Icon(Icons.info, color: FaumaColors.coralCta, size: 24),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Sabias que...?',
+                      '\u00bfSab\u00edas que...?',
                       style: GoogleFonts.inter(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: FaumaColors.tertiary,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'El nombre "Caretta" proviene de la palabra veneciana "carretta", que significa carreta, debido a su caparazon lento pero imparable.',
+                      'El nombre "Caretta" proviene de la palabra veneciana "carretta", que significa carreta, debido a su caparaz\u00f3n lento pero imparable.',
                       style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: const Color(0xFF3F484A),
-                        height: 1.5,
+                        fontSize: 13,
+                        color: FaumaColors.onSurfaceVariant,
+                        height: 1.6,
                       ),
                     ),
                   ],
@@ -1403,7 +2032,150 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     );
   }
 
-  // ── Preguntas ──
+  Widget _buildMythCard({
+    required String title,
+    required String myth,
+    required String reality,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: FaumaColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE8E1DC).withValues(alpha: 0.3),
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x08000000),
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.newsreader(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: FaumaColors.onSurface,
+              height: 1.3,
+            ),
+          ),
+          const SizedBox(height: 16),
+          // MITO label
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+            decoration: BoxDecoration(
+              color: _errorColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              'MITO',
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: _errorColor,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            myth,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              fontStyle: FontStyle.italic,
+              color: FaumaColors.secondary,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            height: 1,
+            color: const Color(0xFFE8E1DC).withValues(alpha: 0.4),
+          ),
+          const SizedBox(height: 12),
+          // REALIDAD label
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+            decoration: BoxDecoration(
+              color: FaumaColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              'REALIDAD',
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: FaumaColors.primary,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            reality,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              color: FaumaColors.onSurface,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: FaumaColors.surfaceContainerLow,
+                shape: BoxShape.circle,
+              ),
+              child:
+                  Icon(Icons.share, color: FaumaColors.secondary, size: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCollapsedMonthCard(String month) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _surfaceContainer,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE8E1DC).withValues(alpha: 0.2),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            month,
+            style: GoogleFonts.newsreader(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: FaumaColors.secondary,
+            ),
+          ),
+          Icon(Icons.expand_more,
+              color: FaumaColors.secondary.withValues(alpha: 0.6),
+              size: 20),
+        ],
+      ),
+    );
+  }
+
+  // ── Preguntas (screen 31) ──────────────────────────────────────────────
+
   Widget _buildPreguntas() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1421,78 +2193,392 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
         // Question input
         Container(
           height: 64,
+          padding: const EdgeInsets.only(left: 24, right: 8),
           decoration: BoxDecoration(
-            color: const Color(0xFFF3EDE7),
+            color: _surfaceContainer,
             borderRadius: BorderRadius.circular(999),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x08000000),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
           ),
           child: Row(
             children: [
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 24),
-                  child: Text(
-                    'Escribe tu pregunta...',
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      color: const Color(0xFFBBC7DC),
-                    ),
+                child: Text(
+                  'Escribe tu pregunta...',
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    color: const Color(0xFFBBC7DC),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: const BoxDecoration(
-                    color: FaumaColors.tertiary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.send, color: Colors.white),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: FaumaColors.tertiaryContainer,
+                  shape: BoxShape.circle,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x33000000),
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
+                child: const Icon(Icons.send, color: Colors.white, size: 20),
               ),
             ],
           ),
         ),
         const SizedBox(height: 32),
 
-        // Q&A Cards
+        // Q&A Card 1
         _buildQuestionCard(
           avatarUrl: _preguntasAvatar1,
-          question: 'Cuanto tiempo pueden aguantar sin respirar?',
-          time: 'Hace 2 horas',
-          scientistName: 'Dr. Carlos',
-          scientistAvatar: _preguntasScientist,
-          isVerified: true,
-          answer:
-              'En reposo invernal pueden aguantar hasta 7 horas sumergidas. Sin embargo, en actividad normal para alimentarse suelen emerger cada 15-30 minutos. Su metabolismo es increiblemente eficiente.',
-          likes: 24,
+          question:
+              '\u00bfCu\u00e1nto tiempo pueden aguantar sin respirar?',
+          timeAgo: 'Hace 2 horas',
+          answerWidget: _buildAnswerWithScientist(
+            scientistAvatar: _preguntasScientist,
+            scientistName: 'Dr. Carlos',
+            answer: RichText(
+              text: TextSpan(
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: FaumaColors.onSurfaceVariant,
+                  height: 1.6,
+                ),
+                children: [
+                  const TextSpan(
+                    text:
+                        'En reposo invernal pueden aguantar hasta ',
+                  ),
+                  TextSpan(
+                    text: '7 horas sumergidas',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: FaumaColors.primary,
+                    ),
+                  ),
+                  const TextSpan(
+                    text:
+                        '. Sin embargo, en actividad normal para alimentarse suelen emerger cada 15-30 minutos. Su metabolismo es incre\u00edblemente eficiente.',
+                  ),
+                ],
+              ),
+            ),
+            likes: 24,
+          ),
         ),
         const SizedBox(height: 24),
 
+        // Q&A Card 2
         _buildQuestionCard(
-          question: 'Es verdad que lloran?',
-          time: 'Hace 5 horas',
-          answer:
-              'No es llanto emocional, son glandulas de sal que expulsan el exceso de sodio de sus ojos. Esto les permite beber agua de mar sin deshidratarse. Es pura adaptacion fisiologica.',
-          likes: 42,
+          question: '\u00bfEs verdad que lloran?',
+          timeAgo: 'Hace 5 horas',
+          answerWidget: _buildSimpleAnswer(
+            answer: RichText(
+              text: TextSpan(
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: FaumaColors.onSurfaceVariant,
+                  height: 1.6,
+                ),
+                children: [
+                  const TextSpan(text: 'No es llanto emocional, son '),
+                  TextSpan(
+                    text: 'gl\u00e1ndulas de sal',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: FaumaColors.primary,
+                    ),
+                  ),
+                  const TextSpan(
+                    text:
+                        ' que expulsan el exceso de sodio de sus ojos. Esto les permite beber agua de mar sin deshidratarse. Es pura adaptaci\u00f3n fisiol\u00f3gica.',
+                  ),
+                ],
+              ),
+            ),
+            likes: 42,
+          ),
         ),
         const SizedBox(height: 24),
 
+        // Q&A Card 3
         _buildQuestionCard(
-          question: 'Que hacer si encuentro una varada?',
-          time: 'Ayer',
-          answer:
-              'Llamar al 112 inmediatamente. No intentes devolverla al agua por tu cuenta, ya que podria tener aire en los pulmones o hipotermia y necesita atencion veterinaria experta.',
-          likes: 15,
-          isEmergency: true,
+          question:
+              '\u00bfQu\u00e9 hacer si encuentro una varada?',
+          timeAgo: 'Ayer',
+          answerWidget: _buildEmergencyAnswer(
+            answer:
+                'Llamar al 112 inmediatamente. No intentes devolverla al agua por tu cuenta, ya que podr\u00eda tener aire en los pulmones o hipotermia y necesita atenci\u00f3n veterinaria experta.',
+            likes: 15,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuestionCard({
+    String? avatarUrl,
+    required String question,
+    required String timeAgo,
+    required Widget answerWidget,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: FaumaColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: _surfaceContainerHigh),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x08000000),
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: FaumaColors.primaryContainer,
+                    width: 2,
+                  ),
+                ),
+                child: ClipOval(
+                  child: avatarUrl != null
+                      ? FaumaImage(
+                          imageUrl: avatarUrl, fit: BoxFit.cover)
+                      : Container(
+                          color: const Color(0xFFD7E3F9),
+                          child: Icon(Icons.person,
+                              color: FaumaColors.primary, size: 24),
+                        ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      question,
+                      style: GoogleFonts.newsreader(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: FaumaColors.onSurface,
+                        height: 1.3,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      timeAgo,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: FaumaColors.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          answerWidget,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnswerWithScientist({
+    required String scientistAvatar,
+    required String scientistName,
+    required Widget answer,
+    required int likes,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(left: 24),
+      padding: const EdgeInsets.only(left: 24),
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: FaumaColors.primaryContainer,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border:
+                      Border.all(color: FaumaColors.tertiary, width: 1),
+                ),
+                child: ClipOval(
+                  child: FaumaImage(
+                      imageUrl: scientistAvatar, fit: BoxFit.cover),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                scientistName,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: FaumaColors.primary,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(Icons.verified,
+                  color: FaumaColors.primary, size: 16),
+            ],
+          ),
+          const SizedBox(height: 12),
+          answer,
+          const SizedBox(height: 12),
+          _buildAnswerActions(likes),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSimpleAnswer({
+    required Widget answer,
+    required int likes,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(left: 24),
+      padding: const EdgeInsets.only(left: 24),
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: FaumaColors.primaryContainer,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          answer,
+          const SizedBox(height: 12),
+          _buildAnswerActions(likes),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmergencyAnswer({
+    required String answer,
+    required int likes,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(left: 24),
+      padding: const EdgeInsets.only(left: 24),
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: FaumaColors.primaryContainer,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFDAD6).withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _errorColor.withValues(alpha: 0.2),
+              ),
+            ),
+            child: RichText(
+              text: TextSpan(
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: FaumaColors.onSurfaceVariant,
+                  height: 1.6,
+                ),
+                children: [
+                  TextSpan(
+                    text: 'Llamar al 112 inmediatamente',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: _errorColor,
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        '. No intentes devolverla al agua por tu cuenta, ya que podr\u00eda tener aire en los pulmones o hipotermia y necesita atenci\u00f3n veterinaria experta.',
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildAnswerActions(likes),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnswerActions(int likes) {
+    return Row(
+      children: [
+        Icon(Icons.thumb_up_outlined,
+            color: FaumaColors.secondary, size: 18),
+        const SizedBox(width: 4),
+        Text(
+          '$likes',
+          style: GoogleFonts.inter(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: FaumaColors.secondary,
+          ),
+        ),
+        const SizedBox(width: 24),
+        Icon(Icons.share, color: FaumaColors.secondary, size: 18),
+        const SizedBox(width: 4),
+        Text(
+          'Compartir',
+          style: GoogleFonts.inter(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: FaumaColors.secondary,
+          ),
         ),
       ],
     );
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // SECTION 3: DIARIO DE SALUD
+  // SECTION 3: DIARIO DE SALUD (screens 32-33)
   // ═══════════════════════════════════════════════════════════════════════════
 
   Widget _buildDiarioSalud() {
@@ -1501,12 +2587,8 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Sub-tabs
-          _buildSubTabs(
-            labels: ['Enciclopedia', 'Diario Veterinaria'],
-            selectedIndex: _saludTab,
-            onSelected: (i) => setState(() => _saludTab = i),
-          ),
+          // Sub-tabs (toggle style)
+          _buildSaludToggle(),
           const SizedBox(height: 24),
 
           if (_saludTab == 0) _buildEnciclopedia(),
@@ -1516,13 +2598,102 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     );
   }
 
-  // ── Enciclopedia ──
+  Widget _buildSaludToggle() {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: FaumaColors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _saludTab = 0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: _saludTab == 0
+                      ? FaumaColors.primary
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(999),
+                  boxShadow: _saludTab == 0
+                      ? const [
+                          BoxShadow(
+                            color: Color(0x15000000),
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Center(
+                  child: Text(
+                    'Enciclopedia',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: _saludTab == 0
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                      color: _saludTab == 0
+                          ? Colors.white
+                          : const Color(0xFF78909C),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _saludTab = 1),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: _saludTab == 1
+                      ? FaumaColors.primary
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(999),
+                  boxShadow: _saludTab == 1
+                      ? const [
+                          BoxShadow(
+                            color: Color(0x15000000),
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Center(
+                  child: Text(
+                    'Diario Veterinaria',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: _saludTab == 1
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                      color: _saludTab == 1
+                          ? Colors.white
+                          : const Color(0xFF78909C),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Enciclopedia (screen 32) ───────────────────────────────────────────
+
   Widget _buildEnciclopedia() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Procedimientos Clinicos',
+          'Procedimientos Cl\u00ednicos',
           style: GoogleFonts.newsreader(
             fontSize: 28,
             fontWeight: FontWeight.w700,
@@ -1531,290 +2702,671 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Manual tecnico especializado para el diagnostico y tratamiento de la tortuga boba. Guias protocolizadas de intervencion veterinaria.',
+          'Manual t\u00e9cnico especializado para el diagn\u00f3stico y tratamiento de la tortuga boba. Gu\u00edas protocolizadas de intervenci\u00f3n veterinaria.',
           style: GoogleFonts.inter(
-            fontSize: 14,
-            color: const Color(0xFF3F484A),
+            fontSize: 13,
+            color: FaumaColors.onSurfaceVariant,
             height: 1.5,
           ),
         ),
         const SizedBox(height: 24),
-        ..._buildEnciclopediaCards(),
+
+        // Procedure cards grid
+        ..._buildProcedureCards(),
       ],
     );
   }
 
-  List<Widget> _buildEnciclopediaCards() {
+  List<Widget> _buildProcedureCards() {
     final procedures = [
-      ('Analitica de sangre', Icons.bloodtype,
-          'Valores hematologicos y bioquimicos de referencia para la evaluacion del estado sistemico y metabolico.'),
-      ('Radiologia', Icons.radio_button_checked,
-          'Proyecciones diagnosticas para la evaluacion osea, pulmonar y deteccion de cuerpos extranos digestivos.'),
-      ('Ecografia', Icons.radio_button_checked,
-          'Visualizacion de organos internos y evaluacion folicular a traves de las ventanas axilares e inguinales.'),
+      ('Anal\u00edtica de sangre', Icons.bloodtype,
+          'Valores hematol\u00f3gicos y bioqu\u00edmicos de referencia para la evaluaci\u00f3n del estado sist\u00e9mico y metab\u00f3lico.'),
+      ('Radiolog\u00eda', Icons.radio_button_checked,
+          'Proyecciones diagn\u00f3sticas para la evaluaci\u00f3n \u00f3sea, pulmonar y detecci\u00f3n de cuerpos extra\u00f1os digestivos.'),
+      ('Ecograf\u00eda', Icons.radio_button_checked,
+          'Visualizaci\u00f3n de \u00f3rganos internos y evaluaci\u00f3n folicular a trav\u00e9s de las ventanas axilares e inguinales.'),
       ('Fluidoterapia', Icons.medical_services,
-          'Protocolos de rehidratacion intravenosa e intracelomica para pacientes criticos y deshidratados.'),
+          'Protocolos de rehidrataci\u00f3n intravenosa e intracel\u00f3mica para pacientes cr\u00edticos y deshidratados.'),
       ('Desbridamiento', Icons.content_cut,
-          'Limpieza y eliminacion quirurgica de tejido necrotico en lesiones de caparazon y tejidos blandos.'),
+          'Limpieza y eliminaci\u00f3n quir\u00fargica de tejido necr\u00f3tico en lesiones de caparaz\u00f3n y tejidos blandos.'),
       ('Sondaje', Icons.water_drop,
-          'Tecnicas de cateterismo y sondaje esofagico para administracion de farmacos y nutricion forzada.'),
+          'T\u00e9cnicas de cateterismo y sondaje esof\u00e1gico para administraci\u00f3n de f\u00e1rmacos y nutrici\u00f3n forzada.'),
       ('Marcaje PIT tags', Icons.nfc,
-          'Identificacion electronica mediante transpondedores integrados para seguimiento de poblaciones.'),
+          'Identificaci\u00f3n electr\u00f3nica mediante transpondedores integrados para seguimiento de poblaciones.'),
       ('Necropsia', Icons.search,
-          'Protocolo sistematico post-mortem para determinar la causa de muerte y estudios epidemiologicos.'),
+          'Protocolo sistem\u00e1tico post-mortem para determinar la causa de muerte y estudios epidemiol\u00f3gicos.'),
       ('Embolia gaseosa', Icons.bubble_chart,
           'Manejo de la enfermedad descompresiva en tortugas capturadas accidentalmente por redes de arrastre.'),
-      ('Alimentacion asistida', Icons.restaurant,
-          'Dietas especificas y tecnicas de alimentacion forzada para ejemplares convalecientes o anorexicos.'),
+      ('Alimentaci\u00f3n asistida', Icons.restaurant,
+          'Dietas espec\u00edficas y t\u00e9cnicas de alimentaci\u00f3n forzada para ejemplares convalecientes o anor\u00e9xicos.'),
       ('Amputaciones', Icons.healing,
-          'Criterios quirurgicos y postoperatorios para amputaciones de aletas debido a enmallamientos severos.'),
+          'Criterios quir\u00fargicos y postoperatorios para amputaciones de aletas debido a enmallamientos severos.'),
       ('Problemas oculares', Icons.visibility,
-          'Diagnostico y tratamiento de conjuntivitis, ulceras corneales y deficiencias de vitamina A.'),
+          'Diagn\u00f3stico y tratamiento de conjuntivitis, \u00falceras corneales y deficiencias de vitamina A.'),
       ('Hembra anidante', Icons.egg,
-          'Cuidados especializados y monitorizacion de hembras durante el proceso de desove y anidacion.'),
+          'Cuidados especializados y monitorizaci\u00f3n de hembras durante el proceso de desove y anidaci\u00f3n.'),
       ('Neonatos', Icons.child_care,
-          'Manejo de crias recien nacidas, criterios de liberacion y cuidados en tanques de crecimiento.'),
-      ('Determinacion sexo', Icons.science,
-          'Tecnicas de sexado laparoscopico y analisis hormonales en ejemplares juveniles e inmaduros.'),
+          'Manejo de cr\u00edas reci\u00e9n nacidas, criterios de liberaci\u00f3n y cuidados en tanques de crecimiento.'),
+      ('Determinaci\u00f3n sexo', Icons.biotech,
+          'T\u00e9cnicas de sexado laparosc\u00f3pico y an\u00e1lisis hormonales en ejemplares juveniles e inmaduros.'),
       ('Enfermedades infecciosas', Icons.coronavirus,
-          'Protocolos de aislamiento y tratamiento para patologias virales como la fibropapilomatosis.'),
+          'Protocolos de aislamiento y tratamiento para patolog\u00edas virales como la fibropapilomatosis.'),
     ];
 
     final widgets = <Widget>[];
-    for (var i = 0; i < procedures.length; i++) {
-      final (title, icon, desc) = procedures[i];
+    for (var i = 0; i < procedures.length; i += 2) {
+      final left = procedures[i];
+      final right = i + 1 < procedures.length ? procedures[i + 1] : null;
       widgets.add(
-        Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: const Color(0x0D005258),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-                child: Icon(icon, color: FaumaColors.primary, size: 24),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.newsreader(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: FaumaColors.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      desc,
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: const Color(0xFF3F484A),
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _buildProcedureCard(left.$1, left.$2, left.$3)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: right != null
+                  ? _buildProcedureCard(right.$1, right.$2, right.$3)
+                  : const SizedBox.shrink(),
+            ),
+          ],
         ),
       );
+      widgets.add(const SizedBox(height: 12));
     }
     return widgets;
   }
 
-  // ── Diario Veterinaria ──
+  Widget _buildProcedureCard(String title, IconData icon, String desc) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A6B72).withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x08000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(icon, color: FaumaColors.primary, size: 24),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: GoogleFonts.newsreader(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: FaumaColors.onSurface,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            desc,
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              color: FaumaColors.onSurfaceVariant,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Diario Veterinaria (screen 33) ─────────────────────────────────────
+
   Widget _buildDiarioVeterinaria() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Summary card
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: FaumaColors.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFF3EDE7)),
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ESTADO',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: FaumaColors.secondary,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: Colors.green,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Recuperacion',
-                            style: GoogleFonts.inter(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF0D3B3B),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: FaumaColors.primary.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.medical_services,
-                      color: FaumaColors.primary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'PESO ACTUAL',
-                            style: GoogleFonts.inter(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              color: FaumaColors.secondary,
-                            ),
-                          ),
-                          Text(
-                            '112 kg',
-                            style: GoogleFonts.inter(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: FaumaColors.onSurface,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'ULTIMO CONTROL',
-                            style: GoogleFonts.inter(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              color: FaumaColors.secondary,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Hace 2 semanas',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: FaumaColors.onSurface,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        _buildVetSummaryCard(),
         const SizedBox(height: 32),
 
         // Timeline entries
-        _buildVetEntry(
-          date: 'MARZO 2027',
-          title: 'Revision trimestral',
-          weight: '112kg',
-          weightUp: true,
-          doctor: 'Dra. Elena',
-          doctorAvatar: _vetDraElena,
-          body:
-              'Herida aleta posterior cicatrizando correctamente. Analitica normal. Se observa buen apetito.',
-          imageUrl: _vetTankImage,
-          isCompleted: true,
-        ),
-        const SizedBox(height: 24),
+        _buildVetEntry1(),
+        const SizedBox(height: 32),
+        _buildVetEntry2(),
+        const SizedBox(height: 32),
+        _buildVetEntry3Locked(),
+      ],
+    );
+  }
 
-        _buildVetEntry(
-          date: 'DICIEMBRE 2026',
-          title: 'Control post-temporada',
-          weight: '108kg',
-          weightUp: false,
-          body:
-              'Recuperacion tras temporada reproductiva. Suplemento vitaminico administrado. Sin anomalias detectadas.',
-          isCompleted: false,
-          isFaded: true,
-        ),
-        const SizedBox(height: 24),
+  Widget _buildVetSummaryCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: FaumaColors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: _surfaceContainer),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x08000000),
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'ESTADO',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: FaumaColors.secondary,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Recuperaci\u00f3n',
+                        style: GoogleFonts.inter(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF1A3A2A),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: FaumaColors.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.medical_services,
+                    color: FaumaColors.primary, size: 24),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'PESO ACTUAL',
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: FaumaColors.secondary,
+                        ),
+                      ),
+                      Text(
+                        '112 kg',
+                        style: GoogleFonts.inter(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: FaumaColors.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '\u00daLTIMO CONTROL',
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: FaumaColors.secondary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Hace 2 semanas',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: FaumaColors.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-        // Locked entry
-        _buildLockedVetEntry(),
+  Widget _buildVetEntry1() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Timeline dot
+        Column(
+          children: [
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: FaumaColors.primary,
+                shape: BoxShape.circle,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x15000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child:
+                  const Icon(Icons.check, color: Colors.white, size: 14),
+            ),
+            Container(
+              width: 2,
+              height: 180,
+              color: FaumaColors.outlineVariant.withValues(alpha: 0.5),
+            ),
+          ],
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: FaumaColors.surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: _surfaceContainer),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x08000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'MARZO 2027',
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: FaumaColors.tertiary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Revisi\u00f3n trimestral',
+                          style: GoogleFonts.newsreader(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: FaumaColors.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8F5E9),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '112kg',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF2E7D32),
+                            ),
+                          ),
+                          const Icon(Icons.arrow_upward,
+                              color: Color(0xFF2E7D32), size: 14),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    ClipOval(
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: FaumaImage(
+                            imageUrl: _vetDraElena, fit: BoxFit.cover),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Dra. Elena',
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF757575),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Herida aleta posterior cicatrizando correctamente. Anal\u00edtica normal. Se observa buen apetito.',
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    color: const Color(0xFF616161),
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: SizedBox(
+                    height: 128,
+                    width: double.infinity,
+                    child: FaumaImage(
+                        imageUrl: _vetTankImage, fit: BoxFit.cover),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVetEntry2() {
+    return Opacity(
+      opacity: 0.8,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Timeline dot
+          Column(
+            children: [
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: FaumaColors.outlineVariant,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.history,
+                    color: Colors.white, size: 14),
+              ),
+              Container(
+                width: 2,
+                height: 60,
+                color: FaumaColors.outlineVariant.withValues(alpha: 0.5),
+              ),
+            ],
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: FaumaColors.surfaceContainerLowest
+                    .withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: _surfaceContainer),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'DICIEMBRE 2026',
+                            style: GoogleFonts.inter(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: FaumaColors.secondary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Control post-temporada',
+                            style: GoogleFonts.newsreader(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF757575),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F5F5),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          '108kg',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF757575),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Recuperaci\u00f3n tras temporada reproductiva. Suplemento vitam\u00ednico administrado. Sin anomal\u00edas detectadas.',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontStyle: FontStyle.italic,
+                      color: const Color(0xFF757575),
+                      height: 1.6,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVetEntry3Locked() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Timeline dot locked
+        Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            color: const Color(0xFFE0E0E0),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.lock,
+              color: Color(0xFF9E9E9E), size: 14),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: FaumaColors.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xFFBDBDBD),
+                style: BorderStyle.solid,
+              ),
+            ),
+            child: Stack(
+              children: [
+                // Blurred content
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Opacity(
+                    opacity: 0.4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'OCTUBRE 2026',
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: FaumaColors.secondary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Ingreso inicial por pesca',
+                          style: GoogleFonts.newsreader(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Evaluaci\u00f3n de traumatismo por red de arrastre...',
+                          style: GoogleFonts.inter(fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Lock overlay
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color:
+                          _surfaceContainer.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: FaumaColors.tertiaryContainer,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.star,
+                                  color: Colors.white, size: 12),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Disponible en nivel H\u00e9roe',
+                                style: GoogleFonts.inter(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: FaumaColors.primary,
+                            borderRadius: BorderRadius.circular(999),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x33000000),
+                                blurRadius: 8,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            'Actualizar a H\u00e9roe',
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // REUSABLE WIDGET BUILDERS
+  // SHARED WIDGETS
   // ═══════════════════════════════════════════════════════════════════════════
 
   Widget _buildCircleButton({
@@ -1824,13 +3376,20 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 44,
-        height: 44,
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.9),
           shape: BoxShape.circle,
-          color: Colors.black.withValues(alpha: 0.15),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x1A000000),
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
-        child: Icon(icon, color: Colors.white, size: 22),
+        child: Icon(icon, color: FaumaColors.primaryContainer, size: 20),
       ),
     );
   }
@@ -1848,7 +3407,7 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
           fontSize: 10,
           fontWeight: FontWeight.w700,
           color: Colors.white,
-          letterSpacing: 2,
+          letterSpacing: 1.5,
         ),
       ),
     );
@@ -1858,24 +3417,21 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     required int index,
     required String title,
     required Color color,
-    required Widget child,
     Color? bgColor,
+    required Widget child,
   }) {
     final isOpen = _fichaSections[index];
-    return Container(
-      decoration: BoxDecoration(
-        color: bgColor ?? FaumaColors.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              setState(() => _fichaSections[index] = !isOpen);
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+    return GestureDetector(
+      onTap: () => setState(() => _fichaSections[index] = !isOpen),
+      child: Container(
+        decoration: BoxDecoration(
+          color: bgColor ?? FaumaColors.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1895,122 +3451,44 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
                 ],
               ),
             ),
-          ),
-          if (isOpen)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-              child: child,
-            ),
-        ],
+            if (isOpen)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+                child: child,
+              ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDataField(
-    String label,
-    String value, {
-    Color? valueColor,
-    bool isItalic = false,
-    bool isBold = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: GoogleFonts.inter(
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            color: FaumaColors.secondary,
-            letterSpacing: 1,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
-            fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
-            color: valueColor ?? FaumaColors.onSurface,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBullet(String text) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 6,
-          height: 6,
-          margin: const EdgeInsets.only(top: 6, right: 12),
-          decoration: const BoxDecoration(
-            color: FaumaColors.tertiary,
-            shape: BoxShape.circle,
-          ),
-        ),
-        Expanded(
-          child: Text(
-            text,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: const Color(0xFF596577),
-              height: 1.5,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildThreatRow(IconData icon, String title, String body) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: FaumaColors.tertiary, size: 24),
-        const SizedBox(width: 16),
-        Expanded(
-          child: RichText(
-            text: TextSpan(
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                color: const Color(0xFF596577),
-                height: 1.5,
-              ),
-              children: [
-                TextSpan(
-                  text: title,
-                  style: const TextStyle(fontWeight: FontWeight.w700),
-                ),
-                const TextSpan(text: ' '),
-                TextSpan(text: body),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildFilterChip(int index, String label) {
-    final isActive = _galleryFilter == index;
+    final selected = _galleryFilter == index;
     return GestureDetector(
       onTap: () => setState(() => _galleryFilter = index),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? FaumaColors.tertiary : const Color(0xFFF3EDE7),
+          color: selected
+              ? FaumaColors.tertiaryContainer
+              : _surfaceContainer,
           borderRadius: BorderRadius.circular(999),
+          boxShadow: selected
+              ? const [
+                  BoxShadow(
+                    color: Color(0x15000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Text(
           label,
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: isActive ? Colors.white : const Color(0xFF3F484A),
+            color: selected ? Colors.white : FaumaColors.onSurfaceVariant,
           ),
         ),
       ),
@@ -2018,13 +3496,15 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
   }
 
   Widget _buildFilterChipLive(int index, String label) {
-    final isActive = _galleryFilter == index;
+    final selected = _galleryFilter == index;
     return GestureDetector(
       onTap: () => setState(() => _galleryFilter = index),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? FaumaColors.tertiary : const Color(0xFFF3EDE7),
+          color: selected
+              ? FaumaColors.tertiaryContainer
+              : _surfaceContainer,
           borderRadius: BorderRadius.circular(999),
         ),
         child: Row(
@@ -2044,7 +3524,8 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: isActive ? Colors.white : const Color(0xFF3F484A),
+                color:
+                    selected ? Colors.white : FaumaColors.onSurfaceVariant,
               ),
             ),
           ],
@@ -2053,1041 +3534,47 @@ class _SpeciesSubscriberScreenState extends State<SpeciesSubscriberScreen> {
     );
   }
 
-  Widget _buildSubTabs({
-    required List<String> labels,
-    required int selectedIndex,
-    required ValueChanged<int> onSelected,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Color(0x33BEC8C9)),
-        ),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: List.generate(labels.length, (i) {
-            final isActive = selectedIndex == i;
-            return Padding(
-              padding: EdgeInsets.only(right: i < labels.length - 1 ? 8 : 0),
-              child: GestureDetector(
-                onTap: () => onSelected(i),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isActive
-                        ? FaumaColors.primaryContainer
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(999),
-                    border: isActive
-                        ? null
-                        : Border.all(color: FaumaColors.outlineVariant),
-                  ),
-                  child: Text(
-                    labels[i],
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight:
-                          isActive ? FontWeight.w700 : FontWeight.w600,
-                      color: isActive
-                          ? Colors.white
-                          : const Color(0xFF3F484A),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      ),
-    );
-  }
-
-  // ── Timeline Builders ──
-
-  Widget _buildTimelineEntry({
-    required String month,
-    required String title,
-    required String body,
-    required bool isHighlighted,
-    String? imageUrl,
-    String? badge,
-    bool hasAvatars = false,
-    bool isLast = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 32),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Month label
-          SizedBox(
-            width: 40,
-            child: Column(
-              children: [
-                Text(
-                  month,
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: isHighlighted
-                        ? FontWeight.w900
-                        : FontWeight.w700,
-                    color: isHighlighted
-                        ? FaumaColors.primaryContainer
-                        : FaumaColors.secondary,
-                    letterSpacing: 1,
-                  ),
-                ),
-                if (isHighlighted)
-                  Container(
-                    width: 8,
-                    height: 8,
-                    margin: const EdgeInsets.only(top: 8),
-                    decoration: const BoxDecoration(
-                      color: FaumaColors.tertiary,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 16),
-
-          // Content card
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: isHighlighted
-                    ? FaumaColors.surface
-                    : Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isHighlighted
-                      ? FaumaColors.primaryContainer
-                      : const Color(0xFFEEE7E1),
-                  width: isHighlighted ? 2 : 1,
-                ),
-                boxShadow: isHighlighted
-                    ? [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ]
-                    : [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 4,
-                        ),
-                      ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (badge != null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          title,
-                          style: GoogleFonts.inter(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: FaumaColors.primary,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: FaumaColors.tertiary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                          child: Text(
-                            badge,
-                            style: GoogleFonts.inter(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: FaumaColors.tertiary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  else
-                    Text(
-                      title,
-                      style: GoogleFonts.inter(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: FaumaColors.primary,
-                      ),
-                    ),
-                  const SizedBox(height: 8),
-                  Text(
-                    body,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: const Color(0xFF3F484A),
-                      height: 1.5,
-                    ),
-                  ),
-                  if (imageUrl != null) ...[
-                    const SizedBox(height: 16),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: FaumaImage(
-                          imageUrl: imageUrl,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ],
-                  if (hasAvatars) ...[
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 32,
-                      child: Stack(
-                        children: [
-                          _buildSmallAvatar(_cicloVidaAgosto1, 0),
-                          _buildSmallAvatar(_cicloVidaAgosto2, 20),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSmallAvatar(String url, double left) {
-    return Positioned(
-      left: left,
+  Widget _buildSubTab(
+      int index, String label, int current, ValueChanged<int> onTap) {
+    final selected = current == index;
+    return GestureDetector(
+      onTap: () => onTap(index),
       child: Container(
-        width: 32,
-        height: 32,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 2),
+          color: selected
+              ? FaumaColors.primaryContainer
+              : Colors.white,
+          borderRadius: BorderRadius.circular(999),
+          border: selected
+              ? null
+              : Border.all(color: FaumaColors.outlineVariant),
+          boxShadow: selected
+              ? const [
+                  BoxShadow(
+                    color: Color(0x15000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
-        child: ClipOval(
-          child: FaumaImage(imageUrl: url, fit: BoxFit.cover),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTimelineSpacer(String month) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 32),
-      child: Opacity(
-        opacity: 0.5,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 40,
-              child: Text(
-                month,
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: FaumaColors.secondary,
-                  letterSpacing: 1,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(top: 8),
-                height: 1,
-                color: const Color(0xFFEEE7E1),
-              ),
-            ),
-          ],
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+            color: selected ? Colors.white : FaumaColors.onSurfaceVariant,
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _buildSabiasQueCard({
-    required IconData icon,
-    required String title,
-    required String body,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3EDE7),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: FaumaColors.primary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: FaumaColors.primary),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  title,
-                  style: GoogleFonts.newsreader(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: FaumaColors.onSurface,
-                    height: 1.3,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            body,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: const Color(0xFF3F484A),
-              height: 1.6,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                color: FaumaColors.coralCta,
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.share, color: Colors.white, size: 14),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Compartir',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCollapsedMonth(String month) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            month,
-            style: GoogleFonts.newsreader(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              fontStyle: FontStyle.italic,
-              color: FaumaColors.secondary,
-            ),
-          ),
-          const Icon(Icons.expand_more, color: FaumaColors.secondary),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCollapsedMonthCard(String month) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3EDE7),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0x33E8E1DC),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            month,
-            style: GoogleFonts.newsreader(
-              fontWeight: FontWeight.w700,
-              color: FaumaColors.secondary,
-            ),
-          ),
-          Icon(
-            Icons.expand_more,
-            color: FaumaColors.secondary.withValues(alpha: 0.6),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMythCard({
-    required String title,
-    required String myth,
-    required String reality,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: FaumaColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0x4DE8E1DC),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.newsreader(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: FaumaColors.onSurface,
-              height: 1.3,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // MITO
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-            decoration: BoxDecoration(
-              color: const Color(0x1ABA1A1A),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              'MITO',
-              style: GoogleFonts.inter(
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFFBA1A1A),
-                letterSpacing: 1,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            myth,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontStyle: FontStyle.italic,
-              color: FaumaColors.secondary,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(height: 1, color: const Color(0x66E8E1DC)),
-          const SizedBox(height: 16),
-          // REALIDAD
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-            decoration: BoxDecoration(
-              color: FaumaColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              'REALIDAD',
-              style: GoogleFonts.inter(
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-                color: FaumaColors.primary,
-                letterSpacing: 1,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            reality,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: FaumaColors.onSurface,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: FaumaColors.surfaceContainerLow,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.share,
-                color: FaumaColors.secondary,
-                size: 16,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuestionCard({
-    String? avatarUrl,
-    required String question,
-    required String time,
-    String? scientistName,
-    String? scientistAvatar,
-    bool isVerified = false,
-    required String answer,
-    required int likes,
-    bool isEmergency = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: FaumaColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFEEE7E1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Question header
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: FaumaColors.primaryContainer,
-                    width: 2,
-                  ),
-                ),
-                child: ClipOval(
-                  child: avatarUrl != null
-                      ? FaumaImage(imageUrl: avatarUrl, fit: BoxFit.cover)
-                      : Container(
-                          color: const Color(0xFFD7E3F9),
-                          child: const Icon(
-                            Icons.person,
-                            color: FaumaColors.primary,
-                          ),
-                        ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      question,
-                      style: GoogleFonts.newsreader(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: FaumaColors.onSurface,
-                        height: 1.3,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      time,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: FaumaColors.secondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Answer
-          Container(
-            margin: const EdgeInsets.only(left: 24),
-            padding: const EdgeInsets.only(left: 24),
-            decoration: const BoxDecoration(
-              border: Border(
-                left: BorderSide(
-                  color: FaumaColors.primaryContainer,
-                  width: 2,
-                ),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (scientistName != null) ...[
-                  Row(
-                    children: [
-                      if (scientistAvatar != null)
-                        Container(
-                          width: 32,
-                          height: 32,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: FaumaColors.tertiary,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: FaumaImage(
-                              imageUrl: scientistAvatar,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      Text(
-                        scientistName,
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: FaumaColors.primary,
-                        ),
-                      ),
-                      if (isVerified) ...[
-                        const SizedBox(width: 4),
-                        const Icon(
-                          Icons.verified,
-                          color: FaumaColors.primary,
-                          size: 16,
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                ],
-                if (isEmergency)
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    margin: const EdgeInsets.only(bottom: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0x4DFFDAD6),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: const Color(0x33BA1A1A),
-                      ),
-                    ),
-                    child: Text(
-                      answer,
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-                        color: const Color(0xFF3F484A),
-                        height: 1.5,
-                      ),
-                    ),
-                  )
-                else
-                  Text(
-                    answer,
-                    style: GoogleFonts.inter(
-                      fontSize: 15,
-                      color: const Color(0xFF3F484A),
-                      height: 1.5,
-                    ),
-                  ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.thumb_up_outlined,
-                      size: 18,
-                      color: FaumaColors.secondary,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$likes',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: FaumaColors.secondary,
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Icon(
-                      Icons.share,
-                      size: 18,
-                      color: FaumaColors.secondary,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Compartir',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: FaumaColors.secondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildVetEntry({
-    required String date,
-    required String title,
-    required String weight,
-    required bool weightUp,
-    String? doctor,
-    String? doctorAvatar,
-    required String body,
-    String? imageUrl,
-    required bool isCompleted,
-    bool isFaded = false,
-  }) {
-    return Opacity(
-      opacity: isFaded ? 0.8 : 1.0,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Timeline dot
-          Column(
-            children: [
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: isCompleted
-                      ? FaumaColors.primary
-                      : FaumaColors.outlineVariant,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  isCompleted ? Icons.check : Icons.history,
-                  size: 14,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 16),
-
-          // Entry card
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: isFaded
-                    ? FaumaColors.surfaceContainerLowest.withValues(alpha: 0.6)
-                    : FaumaColors.surfaceContainerLowest,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFF3EDE7)),
-                boxShadow: isFaded
-                    ? null
-                    : [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 4,
-                        ),
-                      ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            date,
-                            style: GoogleFonts.inter(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: FaumaColors.tertiary,
-                            ),
-                          ),
-                          Text(
-                            title,
-                            style: GoogleFonts.newsreader(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: FaumaColors.onSurface,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: weightUp
-                              ? const Color(0xFFF0FFF4)
-                              : const Color(0xFFF5F5F5),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              weight,
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: weightUp
-                                    ? const Color(0xFF15803D)
-                                    : const Color(0xFF737373),
-                              ),
-                            ),
-                            if (weightUp)
-                              const Icon(
-                                Icons.arrow_upward,
-                                size: 14,
-                                color: Color(0xFF15803D),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (doctorAvatar != null) ...[
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        ClipOval(
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: FaumaImage(
-                              imageUrl: doctorAvatar,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          doctor ?? '',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF57534E),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                  const SizedBox(height: 12),
-                  Text(
-                    body,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontStyle: isFaded ? FontStyle.italic : FontStyle.normal,
-                      color: isFaded
-                          ? const Color(0xFF57534E)
-                          : const Color(0xFF44403C),
-                      height: 1.5,
-                    ),
-                  ),
-                  if (imageUrl != null) ...[
-                    const SizedBox(height: 16),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: SizedBox(
-                        height: 128,
-                        width: double.infinity,
-                        child: FaumaImage(
-                          imageUrl: imageUrl,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLockedVetEntry() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: const BoxDecoration(
-            color: Color(0xFFE8E1DC),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(Icons.lock, size: 14, color: Color(0xFF737373)),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: FaumaColors.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0xFFD4D4D4),
-                style: BorderStyle.solid,
-              ),
-            ),
-            child: Stack(
-              children: [
-                // Blurred content
-                Opacity(
-                  opacity: 0.4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'OCTUBRE 2026',
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: FaumaColors.secondary,
-                        ),
-                      ),
-                      Text(
-                        'Ingreso inicial por pesca',
-                        style: GoogleFonts.newsreader(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        'Evaluacion de traumatismo por red de arrastre...',
-                        style: GoogleFonts.inter(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ),
-                // Overlay
-                Positioned.fill(
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: FaumaColors.tertiary,
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                color: Colors.white,
-                                size: 12,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Disponible en nivel Heroe',
-                                style: GoogleFonts.inter(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: FaumaColors.primary,
-                            borderRadius: BorderRadius.circular(999),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            'Actualizar a Heroe',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// BOTONERA PERSISTENT HEADER DELEGATE
-// ═══════════════════════════════════════════════════════════════════════════════
+// =============================================================================
+// STICKY BOTONERA DELEGATE
+// =============================================================================
 
 class _BotoneraDelegate extends SliverPersistentHeaderDelegate {
   _BotoneraDelegate({
@@ -3101,50 +3588,57 @@ class _BotoneraDelegate extends SliverPersistentHeaderDelegate {
   final List<String> labels;
 
   @override
-  double get minExtent => 72;
-
+  double get minExtent => 56;
   @override
-  double get maxExtent => 72;
+  double get maxExtent => 56;
 
   @override
   Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return Container(
-      color: FaumaColors.surface,
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox.expand(
+      child: Container(
+      decoration: BoxDecoration(
+        color: FaumaColors.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: const Color(0xFFE0E0E0).withValues(alpha: 0.5),
+          ),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Row(
           children: List.generate(labels.length, (i) {
-            final isActive = selectedIndex == i;
+            final selected = i == selectedIndex;
             return Padding(
               padding: EdgeInsets.only(right: i < labels.length - 1 ? 12 : 0),
               child: GestureDetector(
                 onTap: () => onSelected(i),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   decoration: BoxDecoration(
-                    color: isActive ? FaumaColors.primary : Colors.transparent,
+                    color: selected
+                        ? FaumaColors.primaryContainer
+                        : _surfaceContainer,
                     borderRadius: BorderRadius.circular(999),
-                    border: isActive
-                        ? null
-                        : Border.all(color: FaumaColors.primary),
+                    boxShadow: selected
+                        ? const [
+                            BoxShadow(
+                              color: Color(0x20000000),
+                              blurRadius: 6,
+                              offset: Offset(0, 2),
+                            ),
+                          ]
+                        : null,
                   ),
                   child: Text(
                     labels[i],
                     style: GoogleFonts.inter(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color:
-                          isActive ? Colors.white : FaumaColors.primary,
+                      color: selected ? Colors.white : FaumaColors.secondary,
                     ),
                   ),
                 ),
@@ -3153,11 +3647,11 @@ class _BotoneraDelegate extends SliverPersistentHeaderDelegate {
           }),
         ),
       ),
+    ),
     );
   }
 
   @override
-  bool shouldRebuild(covariant _BotoneraDelegate oldDelegate) {
-    return selectedIndex != oldDelegate.selectedIndex;
-  }
+  bool shouldRebuild(covariant _BotoneraDelegate oldDelegate) =>
+      selectedIndex != oldDelegate.selectedIndex;
 }

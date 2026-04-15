@@ -1,37 +1,40 @@
-import 'package:fauma_app/widgets/fauma_image.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_fonts/google_fonts.dart';
-// go_router available for future navigation needs
-// ignore: unused_import
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../theme/colors.dart';
+import '../../widgets/fauma_image.dart';
 
 /// Image URL extracted from 25-perfil.html
 const _kProfileAvatar =
     'https://lh3.googleusercontent.com/aida-public/AB6AXuCuv1K_-ZqYSiIhlNmj66XHczDdGny7EpnL04hG28rA8w_OWWbk_lQ1hpvxaf-g5QdHtRJXzp9mW7eWjLGHJG0mSbJneFsRJnf5EY4MexZV_3R-_f9w_9RuyOpVOi8tYQ0rpz9QUKXbKQjsHLc11N4Yj2XEDSBxMSOC5AaXGIxYuaGlbMxiX642RtAw3kCBzqb9SHcDTtl16d14UvqdMsflNA1Thgd7hndo50orRyaPxQCdcHXw-Rh_TIL7MIWuvxVRVwRZv3OUwrUt';
 
-const _kCoral = Color(0xFFF4847A);
+/// Secondary container color from the design system HTML.
+const _kSecondaryContainer = Color(0xFFD7E3F9);
+
+/// On-secondary-container color from the design system HTML.
+const _kOnSecondaryContainer = Color(0xFF596577);
+
+/// On-primary-container color from the design system HTML.
+const _kOnPrimaryContainer = Color(0xFFA1E9F1);
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: FaumaColors.surface,
       body: Column(
         children: [
-          // ── Top App Bar ─────────────────────────────────────
+          // -- Top App Bar --
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 16),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: Row(
                 children: [
-                  Icon(Icons.menu, color: cs.primaryContainer),
+                  Icon(Icons.menu, color: FaumaColors.primaryContainer),
                   const Spacer(),
                   Text(
                     'The Living Archive',
@@ -39,91 +42,85 @@ class ProfileScreen extends StatelessWidget {
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: cs.primaryContainer,
+                      color: FaumaColors.primaryContainer,
                       letterSpacing: -0.3,
                     ),
                   ),
                   const Spacer(),
-                  Icon(Icons.settings, color: cs.primaryContainer),
+                  Icon(Icons.settings, color: FaumaColors.primaryContainer),
                 ],
               ),
             ),
           ),
 
-          // ── Scrollable Body ─────────────────────────────────
+          // -- Scrollable Body --
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Profile Header ──────────────────────────
-                  _buildProfileHeader(cs),
+                  // -- Profile Header --
+                  _buildProfileHeader(),
                   const SizedBox(height: 40),
 
-                  // ── Subscriptions Section ───────────────────
+                  // -- Subscriptions Section --
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
                       'Mis Suscripciones',
                       style: GoogleFonts.newsreader(
                         fontSize: 24,
                         fontStyle: FontStyle.italic,
-                        color: cs.onSurface,
+                        color: FaumaColors.onSurface,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   _buildSubscriptionCard(
-                    cs,
                     icon: Icons.egg,
                     name: 'Tortuga Caretta caretta',
                     levelLabel: 'HERMANO',
-                    levelColor: cs.primaryContainer,
-                    levelTextColor: const Color(0xFFA1E9F1),
+                    levelColor: FaumaColors.primaryContainer,
+                    levelTextColor: _kOnPrimaryContainer,
                     renewDate: 'Renueva: 15 Mar 2027',
-                    ctaText: 'Subir a Heroe',
+                    ctaText: 'Subir a Héroe',
                   ),
                   const SizedBox(height: 24),
                   _buildSubscriptionCard(
-                    cs,
                     icon: Icons.pets,
-                    name: 'Pinguino Papua',
+                    name: 'Pingüino Papúa',
                     levelLabel: 'AMIGO',
-                    levelColor: cs.surfaceContainerHighest,
-                    levelTextColor: cs.onSurfaceVariant,
+                    levelColor: _kSecondaryContainer,
+                    levelTextColor: _kOnSecondaryContainer,
                     renewDate: 'Renueva: 22 Jun 2027',
                     ctaText: 'Subir nivel',
                   ),
                   const SizedBox(height: 40),
 
-                  // ── Gifts Section ───────────────────────────
+                  // -- Gifts Section --
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
                       'Mis Regalos (2)',
                       style: GoogleFonts.newsreader(
                         fontSize: 24,
                         fontStyle: FontStyle.italic,
-                        color: cs.onSurface,
+                        color: FaumaColors.onSurface,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   _buildGiftCard(
-                    cs,
-                    title: '\uD83C\uDF81 Tortuga Caretta para Lucia',
+                    title: '🎁 Tortuga Caretta para Lucía',
                     date: '10 Dic 2026',
-                    status: 'Activado \u2713',
+                    status: 'Activado ✓',
                     statusBg: const Color(0xFFDCFCE7),
                     statusFg: const Color(0xFF15803D),
                   ),
                   const SizedBox(height: 12),
                   _buildGiftCardPending(
-                    cs,
-                    title: '\uD83C\uDF81 Pinguino Papua para Pablo',
+                    title: '🎁 Pingüino Papúa para Pablo',
                     date: 'Enviado hoy',
                     status: 'Pendiente',
                     statusBg: const Color(0xFFFEF3C7),
@@ -131,21 +128,20 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 40),
 
-                  // ── Settings Section ────────────────────────
+                  // -- Settings Section --
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      'Configuracion',
+                      'Configuración',
                       style: GoogleFonts.newsreader(
                         fontSize: 24,
                         fontStyle: FontStyle.italic,
-                        color: cs.onSurface,
+                        color: FaumaColors.onSurface,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  _buildSettingsGroup(cs),
+                  _buildSettingsGroup(),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -156,12 +152,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ── Profile Header ────────────────────────────────────────────
-  Widget _buildProfileHeader(ColorScheme cs) {
+  // -- Profile Header -------------------------------------------------------
+  Widget _buildProfileHeader() {
     return Center(
       child: Column(
         children: [
-          // Avatar
+          // Avatar with ring
           Container(
             width: 128,
             height: 128,
@@ -169,7 +165,7 @@ class ProfileScreen extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: cs.primary.withValues(alpha: 0.1),
+                color: FaumaColors.primary.withValues(alpha: 0.1),
                 width: 4,
               ),
             ),
@@ -184,39 +180,40 @@ class ProfileScreen extends StatelessWidget {
 
           // Name
           Text(
-            'Maria Garcia',
+            'María García',
             style: GoogleFonts.newsreader(
               fontSize: 30,
               fontWeight: FontWeight.w600,
-              color: cs.onSurface,
+              color: FaumaColors.onSurface,
             ),
           ),
           const SizedBox(height: 8),
 
           // Rank badge
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 6),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             decoration: BoxDecoration(
-              color: cs.primary.withValues(alpha: 0.1),
+              color: FaumaColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(999),
               border: Border.all(
-                color: cs.primary.withValues(alpha: 0.05),
+                color: FaumaColors.primary.withValues(alpha: 0.05),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: cs.primaryContainer.withValues(alpha: 0.1),
+                  color:
+                      FaumaColors.primaryContainer.withValues(alpha: 0.1),
                   blurRadius: 15,
                 ),
               ],
             ),
             child: Text(
-              '\uD83C\uDFC5 Heroina de la Conservacion',
+              '🏅 Heroína de la Conservación',
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.3,
-                color: cs.primary,
+                color: FaumaColors.primary,
               ),
             ),
           ),
@@ -225,15 +222,22 @@ class ProfileScreen extends StatelessWidget {
           // Edit profile link
           GestureDetector(
             onTap: () {},
-            child: Text(
-              'Editar perfil',
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: cs.secondary,
-                decoration: TextDecoration.underline,
-                decorationColor:
-                    cs.secondary.withValues(alpha: 0.2),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: FaumaColors.secondary.withValues(alpha: 0.2),
+                  ),
+                ),
+              ),
+              padding: const EdgeInsets.only(bottom: 2),
+              child: Text(
+                'Editar perfil',
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: FaumaColors.secondary,
+                ),
               ),
             ),
           ),
@@ -242,9 +246,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ── Subscription Card ─────────────────────────────────────────
-  Widget _buildSubscriptionCard(
-    ColorScheme cs, {
+  // -- Subscription Card ----------------------------------------------------
+  Widget _buildSubscriptionCard({
     required IconData icon,
     required String name,
     required String levelLabel,
@@ -256,7 +259,7 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -266,10 +269,12 @@ class ProfileScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: cs.primaryContainer.withValues(alpha: 0.1),
+                  color:
+                      FaumaColors.primaryContainer.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: cs.primary, size: 28),
+                child:
+                    Icon(icon, color: FaumaColors.primary, size: 28),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -282,7 +287,7 @@ class ProfileScreen extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                         height: 1.2,
-                        color: cs.onSurface,
+                        color: FaumaColors.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -314,7 +319,7 @@ class ProfileScreen extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
-                  color: cs.onSurface.withValues(alpha: 0.05),
+                  color: FaumaColors.onSurface.withValues(alpha: 0.05),
                 ),
               ),
             ),
@@ -326,7 +331,7 @@ class ProfileScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: cs.secondary,
+                    color: FaumaColors.secondary,
                   ),
                 ),
                 GestureDetector(
@@ -338,12 +343,12 @@ class ProfileScreen extends StatelessWidget {
                         style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: _kCoral,
+                          color: FaumaColors.coralCta,
                         ),
                       ),
                       const SizedBox(width: 4),
                       Icon(Icons.arrow_forward,
-                          color: _kCoral, size: 16),
+                          color: FaumaColors.coralCta, size: 16),
                     ],
                   ),
                 ),
@@ -355,9 +360,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ── Gift Card ─────────────────────────────────────────────────
-  Widget _buildGiftCard(
-    ColorScheme cs, {
+  // -- Gift Card (activated) ------------------------------------------------
+  Widget _buildGiftCard({
     required String title,
     required String date,
     required String status,
@@ -367,7 +371,7 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -382,7 +386,7 @@ class ProfileScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: cs.onSurface,
+                    color: FaumaColors.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -391,15 +395,15 @@ class ProfileScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     fontStyle: FontStyle.italic,
-                    color: cs.secondary.withValues(alpha: 0.7),
+                    color: FaumaColors.secondary.withValues(alpha: 0.7),
                   ),
                 ),
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 12, vertical: 4),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
               color: statusBg,
               borderRadius: BorderRadius.circular(999),
@@ -419,9 +423,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ── Gift Card Pending (with resend button) ────────────────────
-  Widget _buildGiftCardPending(
-    ColorScheme cs, {
+  // -- Gift Card (pending, with resend button) ------------------------------
+  Widget _buildGiftCardPending({
     required String title,
     required String date,
     required String status,
@@ -431,7 +434,7 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -448,7 +451,7 @@ class ProfileScreen extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: cs.onSurface,
+                        color: FaumaColors.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -458,7 +461,7 @@ class ProfileScreen extends StatelessWidget {
                         fontSize: 12,
                         fontStyle: FontStyle.italic,
                         color:
-                            cs.secondary.withValues(alpha: 0.7),
+                            FaumaColors.secondary.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -492,14 +495,14 @@ class ProfileScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.forward_to_inbox,
-                      color: _kCoral, size: 14),
+                      color: FaumaColors.coralCta, size: 14),
                   const SizedBox(width: 4),
                   Text(
-                    'Reenviar codigo',
+                    'Reenviar código',
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: _kCoral,
+                      color: FaumaColors.coralCta,
                     ),
                   ),
                 ],
@@ -511,23 +514,21 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ── Settings Group ────────────────────────────────────────────
-  Widget _buildSettingsGroup(ColorScheme cs) {
+  // -- Settings Group -------------------------------------------------------
+  Widget _buildSettingsGroup() {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
-          _settingsItem(
-              cs, Icons.payments, 'Metodos de pago'),
-          _settingsItem(
-              cs, Icons.receipt_long, 'Historial de donaciones'),
-          _settingsItem(
-              cs, Icons.notifications, 'Notificaciones'),
-          _settingsItem(cs, Icons.help, 'Ayuda y contacto'),
-          // Logout (no chevron, coral color)
+          _settingsItem(Icons.payments, 'Métodos de pago'),
+          _settingsItem(Icons.receipt_long, 'Historial de donaciones'),
+          _settingsItem(Icons.notifications, 'Notificaciones'),
+          _settingsItem(Icons.help, 'Ayuda y contacto'),
+          // Logout row -- coral color, no chevron
           Material(
             color: Colors.transparent,
             child: InkWell(
@@ -537,15 +538,15 @@ class ProfileScreen extends StatelessWidget {
                     horizontal: 24, vertical: 20),
                 child: Row(
                   children: [
-                    Icon(Icons.logout, color: _kCoral),
+                    Icon(Icons.logout, color: FaumaColors.coralCta),
                     const SizedBox(width: 16),
                     Text(
-                      'CERRAR SESION',
+                      'CERRAR SESIÓN',
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 2,
-                        color: _kCoral,
+                        color: FaumaColors.coralCta,
                       ),
                     ),
                   ],
@@ -558,18 +559,17 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _settingsItem(
-      ColorScheme cs, IconData icon, String label) {
+  Widget _settingsItem(IconData icon, String label) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () {},
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 24, vertical: 20),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Row(
             children: [
-              Icon(icon, color: cs.secondary),
+              Icon(icon, color: FaumaColors.secondary),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
@@ -577,12 +577,12 @@ class ProfileScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: cs.onSurface,
+                    color: FaumaColors.onSurface,
                   ),
                 ),
               ),
               Icon(Icons.chevron_right,
-                  color: cs.secondary.withValues(alpha: 0.4)),
+                  color: FaumaColors.secondary.withValues(alpha: 0.4)),
             ],
           ),
         ),

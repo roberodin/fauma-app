@@ -1,6 +1,6 @@
+import 'package:fauma_app/theme/colors.dart';
 import 'package:fauma_app/widgets/fauma_image.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,27 +18,25 @@ class ShippingScreen extends StatefulWidget {
 class _ShippingScreenState extends State<ShippingScreen> {
   bool _saveAddress = true;
   String _selectedProvince = 'Selecciona una provincia';
-  String _selectedCountry = 'Espana';
+  String _selectedCountry = 'Espa\u00F1a \uD83C\uDDEA\uD83C\uDDF8';
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: FaumaColors.surface,
       body: Column(
         children: [
-          // ── Top App Bar ─────────────────────────────────────
+          // ── Top App Bar ─────────────────────────────────────────
           SafeArea(
             bottom: false,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 8),
+              height: 64,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: cs.surface,
+                color: FaumaColors.surface,
                 border: Border(
                   bottom: BorderSide(
-                    color: cs.outlineVariant.withValues(alpha: 0.3),
+                    color: FaumaColors.outlineVariant.withValues(alpha: 0.3),
                   ),
                 ),
               ),
@@ -46,8 +44,11 @@ class _ShippingScreenState extends State<ShippingScreen> {
                 children: [
                   IconButton(
                     onPressed: () => context.pop(),
-                    icon: Icon(Icons.arrow_back,
-                        color: cs.primaryContainer),
+                    style: IconButton.styleFrom(
+                      shape: const CircleBorder(),
+                    ),
+                    icon: const Icon(Icons.arrow_back,
+                        color: FaumaColors.primaryContainer),
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -55,7 +56,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                     style: GoogleFonts.newsreader(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: cs.primaryContainer,
+                      color: FaumaColors.primaryContainer,
                     ),
                   ),
                   const Spacer(),
@@ -65,42 +66,41 @@ class _ShippingScreenState extends State<ShippingScreen> {
             ),
           ),
 
-          // ── Scrollable Body ─────────────────────────────────
+          // ── Scrollable Body ─────────────────────────────────────
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 160),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Progress Indicator ──────────────────────
-                  _buildProgressIndicator(cs),
+                  // ── Progress Indicator ──────────────────────────
+                  _buildProgressIndicator(),
                   const SizedBox(height: 32),
 
-                  // ── Order Summary Card ─────────────────────
-                  _buildOrderSummary(cs),
+                  // ── Order Summary Card ─────────────────────────
+                  _buildOrderSummary(),
                   const SizedBox(height: 32),
 
-                  // ── Form Fields ─────────────────────────────
-                  _buildLabel(cs, 'Nombre completo'),
+                  // ── Form Fields ────────────────────────────────
+                  _buildLabel('Nombre completo'),
                   _buildTextField('Tu nombre y apellidos'),
                   const SizedBox(height: 16),
 
-                  _buildLabel(cs, 'Direccion (calle y numero)'),
+                  _buildLabel('Direcci\u00F3n (calle y n\u00FAmero)'),
                   _buildTextField('Ej. Calle Mayor 123'),
                   const SizedBox(height: 16),
 
-                  _buildLabel(cs, 'Piso / Puerta (opcional)'),
-                  _buildTextField('2o B, Atico...'),
+                  _buildLabel('Piso / Puerta (opcional)'),
+                  _buildTextField('2\u00BA B, \u00C1tico...'),
                   const SizedBox(height: 16),
 
                   Row(
                     children: [
                       Expanded(
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildLabel(cs, 'Codigo postal'),
+                            _buildLabel('C\u00F3digo postal'),
                             _buildTextField('28001'),
                           ],
                         ),
@@ -108,10 +108,9 @@ class _ShippingScreenState extends State<ShippingScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildLabel(cs, 'Ciudad'),
+                            _buildLabel('Ciudad'),
                             _buildTextField('Madrid'),
                           ],
                         ),
@@ -120,9 +119,8 @@ class _ShippingScreenState extends State<ShippingScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  _buildLabel(cs, 'Provincia'),
+                  _buildLabel('Provincia'),
                   _buildDropdown(
-                    cs,
                     _selectedProvince,
                     [
                       'Selecciona una provincia',
@@ -136,78 +134,82 @@ class _ShippingScreenState extends State<ShippingScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  _buildLabel(cs, 'Pais'),
+                  _buildLabel('Pa\u00EDs'),
                   _buildDropdown(
-                    cs,
                     _selectedCountry,
-                    ['Espana', 'Portugal', 'Francia'],
+                    [
+                      'Espa\u00F1a \uD83C\uDDEA\uD83C\uDDF8',
+                      'Portugal \uD83C\uDDF5\uD83C\uDDF9',
+                      'Francia \uD83C\uDDEB\uD83C\uDDF7',
+                    ],
                     (val) => setState(
                         () => _selectedCountry = val ?? _selectedCountry),
                   ),
                   const SizedBox(height: 16),
 
-                  _buildLabel(cs, 'Telefono de contacto'),
+                  _buildLabel('Tel\u00E9fono de contacto'),
                   TextField(
                     decoration: InputDecoration(
                       hintText: '+34 600 000 000',
-                      prefixIcon: Icon(Icons.phone_iphone,
-                          color: cs.secondary),
+                      prefixIcon: const Icon(Icons.phone_iphone,
+                          color: FaumaColors.secondary),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 16),
                     ),
                   ),
                   const SizedBox(height: 32),
 
-                  // ── Delivery Info Card ─────────────────────
-                  _buildDeliveryInfo(cs),
+                  // ── Delivery Info Card ─────────────────────────
+                  _buildDeliveryInfo(),
                   const SizedBox(height: 24),
 
-                  // ── Save Address Toggle ────────────────────
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Guardar como direccion principal',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: cs.secondary,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => setState(
-                            () => _saveAddress = !_saveAddress),
-                        child: AnimatedContainer(
-                          duration:
-                              const Duration(milliseconds: 200),
-                          width: 44,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(999),
-                            color: _saveAddress
-                                ? cs.primaryContainer
-                                : cs.outlineVariant,
+                  // ── Save Address Toggle ────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Guardar como direcci\u00F3n principal',
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: FaumaColors.secondary,
                           ),
-                          child: AnimatedAlign(
-                            duration:
-                                const Duration(milliseconds: 200),
-                            alignment: _saveAddress
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: Container(
-                              width: 16,
-                              height: 16,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 4),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
+                        ),
+                        GestureDetector(
+                          onTap: () =>
+                              setState(() => _saveAddress = !_saveAddress),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 44,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(999),
+                              color: _saveAddress
+                                  ? FaumaColors.primaryContainer
+                                  : FaumaColors.outlineVariant,
+                            ),
+                            child: AnimatedAlign(
+                              duration: const Duration(milliseconds: 200),
+                              alignment: _saveAddress
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Container(
+                                width: 16,
+                                height: 16,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 4),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -216,7 +218,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
         ],
       ),
 
-      // ── Sticky CTA ─────────────────────────────────────────
+      // ── Sticky CTA ─────────────────────────────────────────────
       bottomSheet: Container(
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
@@ -225,9 +227,9 @@ class _ShippingScreenState extends State<ShippingScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              cs.surface.withValues(alpha: 0),
-              cs.surface,
-              cs.surface,
+              FaumaColors.surface.withValues(alpha: 0),
+              FaumaColors.surface,
+              FaumaColors.surface,
             ],
           ),
         ),
@@ -236,7 +238,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
           child: ElevatedButton(
             onPressed: () => context.go('/conversion/gift'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: cs.tertiaryContainer,
+              backgroundColor: FaumaColors.tertiaryContainer,
               foregroundColor: Colors.white,
               shape: const StadiumBorder(),
               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -262,8 +264,8 @@ class _ShippingScreenState extends State<ShippingScreen> {
     );
   }
 
-  // ── Progress Indicator ────────────────────────────────────────
-  Widget _buildProgressIndicator(ColorScheme cs) {
+  // ── Progress Indicator ──────────────────────────────────────────
+  Widget _buildProgressIndicator() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Stack(
@@ -275,21 +277,20 @@ class _ShippingScreenState extends State<ShippingScreen> {
             right: 0,
             child: Container(
               height: 2,
-              color: cs.surfaceContainerHighest,
+              color: const Color(0xFFE8E1DC), // surface-variant
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Step 1 - Done
-              _progressStep(cs, Icons.check, 'Nivel',
+              _progressStep(Icons.check, 'Nivel',
                   isActive: false, isDone: true),
               // Step 2 - Active
-              _progressStep(cs, Icons.local_shipping, 'Envio',
+              _progressStep(Icons.local_shipping, 'Env\u00EDo',
                   isActive: true),
               // Step 3 - Pending
-              _progressStep(cs, Icons.payments, 'Pago',
-                  isActive: false),
+              _progressStep(Icons.payments, 'Pago', isActive: false),
             ],
           ),
         ],
@@ -297,8 +298,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
     );
   }
 
-  Widget _progressStep(
-      ColorScheme cs, IconData icon, String label,
+  Widget _progressStep(IconData icon, String label,
       {bool isActive = false, bool isDone = false}) {
     final double size = isActive ? 40 : 32;
     return Column(
@@ -309,12 +309,12 @@ class _ShippingScreenState extends State<ShippingScreen> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: (isActive || isDone)
-                ? cs.primaryContainer
-                : cs.surfaceContainerHighest,
+                ? FaumaColors.primaryContainer
+                : const Color(0xFFE8E1DC), // surface-variant
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: cs.primary.withValues(alpha: 0.1),
+                      color: FaumaColors.primary.withValues(alpha: 0.1),
                       blurRadius: 8,
                       spreadRadius: 4,
                     ),
@@ -325,7 +325,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
             icon,
             color: (isActive || isDone)
                 ? Colors.white
-                : cs.secondary,
+                : FaumaColors.secondary,
             size: isActive ? 24 : 16,
           ),
         ),
@@ -335,22 +335,22 @@ class _ShippingScreenState extends State<ShippingScreen> {
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-            color: isActive ? cs.primary : cs.secondary,
+            color: isActive ? FaumaColors.primary : FaumaColors.secondary,
           ),
         ),
       ],
     );
   }
 
-  // ── Order Summary Card ────────────────────────────────────────
-  Widget _buildOrderSummary(ColorScheme cs) {
+  // ── Order Summary Card ──────────────────────────────────────────
+  Widget _buildOrderSummary() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
+          color: const Color(0xFFE8E1DC).withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -360,7 +360,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
             height: 64,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: cs.primary.withValues(alpha: 0.1),
+              color: FaumaColors.primary.withValues(alpha: 0.1),
             ),
             child: ClipOval(
               child: FaumaImage(
@@ -380,34 +380,33 @@ class _ShippingScreenState extends State<ShippingScreen> {
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     height: 1.2,
-                    color: cs.onSurface,
+                    color: FaumaColors.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '\u20AC15/mes',
+                      '\u20AC15',
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: cs.secondary,
+                        color: FaumaColors.secondary,
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: cs.primary.withValues(alpha: 0.1),
+                        color: FaumaColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(999),
                       ),
                       child: Text(
                         'Incluye regalo\uD83D\uDC22',
                         style: GoogleFonts.inter(
                           fontSize: 11,
-                          color: cs.primary,
+                          color: FaumaColors.primary,
                         ),
                       ),
                     ),
@@ -421,19 +420,19 @@ class _ShippingScreenState extends State<ShippingScreen> {
     );
   }
 
-  // ── Delivery Info Card ────────────────────────────────────────
-  Widget _buildDeliveryInfo(ColorScheme cs) {
+  // ── Delivery Info Card ──────────────────────────────────────────
+  Widget _buildDeliveryInfo() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLowest,
+        color: FaumaColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: cs.surfaceContainerHighest.withValues(alpha: 0.2),
+          color: const Color(0xFFE8E1DC).withValues(alpha: 0.2),
         ),
         boxShadow: [
           BoxShadow(
-            color: cs.onSurface.withValues(alpha: 0.04),
+            color: FaumaColors.onSurface.withValues(alpha: 0.04),
             blurRadius: 8,
           ),
         ],
@@ -443,23 +442,23 @@ class _ShippingScreenState extends State<ShippingScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.inventory_2, color: cs.primary),
+              const Icon(Icons.inventory_2, color: FaumaColors.primary),
               const SizedBox(width: 12),
               Expanded(
                 child: RichText(
                   text: TextSpan(
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: cs.secondary,
+                      color: FaumaColors.secondary,
                     ),
                     children: [
-                      const TextSpan(text: 'Envio estimado: '),
+                      const TextSpan(text: 'Env\u00EDo estimado: '),
                       TextSpan(
-                        text: '7-10 dias laborables',
+                        text: '7-10 d\u00EDas laborables',
                         style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
-                          color: cs.onSurface,
+                          color: FaumaColors.onSurface,
                         ),
                       ),
                     ],
@@ -472,20 +471,21 @@ class _ShippingScreenState extends State<ShippingScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: cs.primary.withValues(alpha: 0.05),
+              color: FaumaColors.primary.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                Icon(Icons.verified, color: cs.primary, size: 20),
+                const Icon(Icons.verified,
+                    color: FaumaColors.primary, size: 20),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Envio gratuito incluido en tu suscripcion',
+                    'Env\u00EDo gratuito incluido en tu suscripci\u00F3n',
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: cs.primary,
+                      color: FaumaColors.primary,
                     ),
                   ),
                 ),
@@ -497,8 +497,8 @@ class _ShippingScreenState extends State<ShippingScreen> {
     );
   }
 
-  // ── Helpers ────────────────────────────────────────────────────
-  Widget _buildLabel(ColorScheme cs, String text) {
+  // ── Helpers ─────────────────────────────────────────────────────
+  Widget _buildLabel(String text) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, bottom: 4),
       child: Text(
@@ -506,7 +506,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
         style: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: cs.secondary,
+          color: FaumaColors.secondary,
         ),
       ),
     );
@@ -519,7 +519,6 @@ class _ShippingScreenState extends State<ShippingScreen> {
   }
 
   Widget _buildDropdown(
-    ColorScheme cs,
     String value,
     List<String> items,
     ValueChanged<String?> onChanged,
@@ -527,11 +526,11 @@ class _ShippingScreenState extends State<ShippingScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLowest,
+        color: FaumaColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(999),
         boxShadow: [
           BoxShadow(
-            color: cs.onSurface.withValues(alpha: 0.04),
+            color: FaumaColors.onSurface.withValues(alpha: 0.04),
             blurRadius: 4,
           ),
         ],
@@ -540,15 +539,14 @@ class _ShippingScreenState extends State<ShippingScreen> {
         child: DropdownButton<String>(
           value: value,
           isExpanded: true,
-          icon: Icon(Icons.expand_more, color: cs.secondary),
+          icon: const Icon(Icons.expand_more, color: FaumaColors.secondary),
           items: items
-              .map((e) =>
-                  DropdownMenuItem(value: e, child: Text(e)))
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
               .toList(),
           onChanged: onChanged,
           style: GoogleFonts.inter(
             fontSize: 14,
-            color: cs.onSurface,
+            color: FaumaColors.onSurface,
           ),
         ),
       ),

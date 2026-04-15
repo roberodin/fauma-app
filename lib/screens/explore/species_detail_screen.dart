@@ -22,6 +22,8 @@ const _avatar3Url =
     'https://lh3.googleusercontent.com/aida-public/AB6AXuBr2ONEZ0H1DYizVZ8n_ZEQZaErIrZhUQBmTfI7lwDc1a2OOq-v1Bzo5y7EWb6GSrJ-DqsdHeEnt--xSLZvpCmc8z5hh4BQlyXRqogPJuC3pYXPOFJ_GL0evgdlnuBplRMwYLn_JBuoq9qrDhzukRcpptz3mo4Ps7MycaWnwmO-W0cleWH3fYa4Agz_qY4oB1qjETsbf4iH3wbeOjCVRE45p9Z47E26_JfALXD2UyIM1FMgEYP3OZu693EpV4xfippuwjDOKI3mucmS';
 
 /// Public species presentation screen -- shown before subscription.
+///
+/// Design reference: 55-especie-presentacion-publica.html
 class SpeciesDetailScreen extends StatelessWidget {
   const SpeciesDetailScreen({super.key, required this.id});
 
@@ -40,13 +42,13 @@ class SpeciesDetailScreen extends StatelessWidget {
               children: [
                 _buildHeroSection(context),
                 _buildContentBody(context),
-                // Extra bottom padding for the sticky CTA
+                // Extra bottom padding so content clears the sticky CTA
                 const SizedBox(height: 120),
               ],
             ),
           ),
 
-          // ── Top action buttons ──
+          // ── Top action buttons (over hero) ──
           Positioned(
             top: MediaQuery.of(context).padding.top + 8,
             left: 16,
@@ -56,13 +58,7 @@ class SpeciesDetailScreen extends StatelessWidget {
               children: [
                 _CircleIconButton(
                   icon: Icons.arrow_back,
-                  onTap: () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      context.go('/explore');
-                    }
-                  },
+                  onTap: () => context.go('/explore'),
                 ),
                 _CircleIconButton(
                   icon: Icons.share,
@@ -87,6 +83,7 @@ class SpeciesDetailScreen extends StatelessWidget {
   }
 
   // ── Hero Section ─────────────────────────────────────────────────────────
+  // Matches: 751px hero with gradient from transparent -> 20% black -> 90% primaryContainer
 
   Widget _buildHeroSection(BuildContext context) {
     return SizedBox(
@@ -99,7 +96,7 @@ class SpeciesDetailScreen extends StatelessWidget {
             imageUrl: _heroImageUrl,
             fit: BoxFit.cover,
           ),
-          // Gradient overlay matching Stitch: transparent -> 20% black -> 90% primaryContainer
+          // Gradient overlay: transparent -> 20% black at 60% -> 90% primaryContainer
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -114,7 +111,7 @@ class SpeciesDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Title overlay at bottom
+          // Title overlay at bottom of hero
           Positioned(
             bottom: 32,
             left: 24,
@@ -143,7 +140,7 @@ class SpeciesDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Scientific name
+                // Scientific name (light italic)
                 Text(
                   'Caretta caretta',
                   style: GoogleFonts.newsreader(
@@ -155,7 +152,7 @@ class SpeciesDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                // Common name
+                // Common name (bold large)
                 Text(
                   'Tortuga Boba',
                   style: GoogleFonts.newsreader(
@@ -200,6 +197,7 @@ class SpeciesDetailScreen extends StatelessWidget {
   }
 
   // ── Intro Quote ──────────────────────────────────────────────────────────
+  // White card with left-8 primary border, decorative quote mark, italic headline text
 
   Widget _buildIntroQuote() {
     return Container(
@@ -223,7 +221,7 @@ class SpeciesDetailScreen extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Decorative quotation mark
+          // Decorative quotation mark (top-right, large, 10% primary)
           Positioned(
             top: -8,
             right: 0,
@@ -252,13 +250,13 @@ class SpeciesDetailScreen extends StatelessWidget {
     );
   }
 
-  // ── Presentation + Stats Grid ────────────────────────────────────────────
+  // ── Mini Presentation + 2x2 Stats Grid ──────────────────────────────────
 
   Widget _buildPresentationAndStats() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Mini presentation
+        // Mini presentation card
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
@@ -299,8 +297,7 @@ class SpeciesDetailScreen extends StatelessWidget {
                   ),
                   children: [
                     const TextSpan(
-                      text:
-                          'Su nombre cient\u00edfico, ',
+                      text: 'Su nombre cient\u00edfico, ',
                     ),
                     TextSpan(
                       text: 'Caretta',
@@ -323,93 +320,114 @@ class SpeciesDetailScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        // Stats grid 2x2
+        // 2x2 Stats grid
         _buildStatsGrid(),
       ],
     );
   }
 
   Widget _buildStatsGrid() {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 1.1,
+    return Column(
       children: [
-        _StatCard(
-          icon: Icons.warning_amber_rounded,
-          iconColor: FaumaColors.tertiary,
-          label: 'Estado IUCN',
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFDAD6), // tertiary-fixed
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              'Vulnerable',
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF7E2A25), // on-tertiary-fixed-variant
+        // Row 1: IUCN + Tendencia
+        Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                icon: Icons.warning_amber_rounded,
+                iconColor: FaumaColors.tertiary,
+                label: 'Estado IUCN',
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFDAD6), // tertiary-fixed
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    'Vulnerable',
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color:
+                          const Color(0xFF7E2A25), // on-tertiary-fixed-variant
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        _StatCard(
-          icon: Icons.trending_down,
-          iconColor: FaumaColors.tertiary,
-          label: 'Tendencia',
-          child: Text(
-            'En descenso',
-            style: GoogleFonts.inter(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: FaumaColors.onSurface,
+            const SizedBox(width: 12),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.trending_down,
+                iconColor: const Color(0xFFBA1A1A), // error
+                label: 'Tendencia',
+                child: Text(
+                  'En descenso',
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: FaumaColors.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-        _StatCard(
-          icon: Icons.public,
-          iconColor: FaumaColors.primary,
-          label: 'H\u00e1bitat',
-          child: Text(
-            'Oc\u00e9anos templados\ny subtropicales',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: FaumaColors.onSurface,
-              height: 1.3,
+        const SizedBox(height: 12),
+        // Row 2: Habitat + Peso
+        Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                icon: Icons.public,
+                iconColor: FaumaColors.primary,
+                label: 'H\u00e1bitat',
+                child: Text(
+                  'Oc\u00e9anos templados y subtropicales',
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: FaumaColors.onSurface,
+                    height: 1.3,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        _StatCard(
-          icon: Icons.scale,
-          iconColor: FaumaColors.primary,
-          label: 'Peso medio',
-          child: Text(
-            '135 kg',
-            style: GoogleFonts.inter(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: FaumaColors.onSurface,
+            const SizedBox(width: 12),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.scale,
+                iconColor: FaumaColors.primary,
+                label: 'Peso medio',
+                child: Text(
+                  '135 kg',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: FaumaColors.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
   }
 
   // ── Why Protect Section ──────────────────────────────────────────────────
+  // Dark red background (on-tertiary-fixed = #410003), decorative blur circle
 
   Widget _buildWhyProtectSection() {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF410003), // on-tertiary-fixed (dark red bg)
+        color: const Color(0xFF410003), // on-tertiary-fixed
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -421,7 +439,7 @@ class SpeciesDetailScreen extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Decorative blurred circle
+          // Decorative blurred circle (top-right)
           Positioned(
             top: -64,
             right: -64,
@@ -463,7 +481,7 @@ class SpeciesDetailScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     color: const Color(0xFFFFDAD6)
-                        .withValues(alpha: 0.9), // tertiary-fixed / 90%
+                        .withValues(alpha: 0.9), // tertiary-fixed at 90%
                     height: 1.7,
                   ),
                   children: [
@@ -492,18 +510,19 @@ class SpeciesDetailScreen extends StatelessWidget {
   }
 
   // ── Why Support Section ──────────────────────────────────────────────────
+  // Volunteer image (tilted), "Accion Colectiva" label, headline, body, avatar stack
 
   Widget _buildWhySupportSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Volunteer image
+        // Volunteer image with slight rotation + shadow
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: AspectRatio(
             aspectRatio: 1,
             child: Transform.rotate(
-              angle: 0.035, // slight rotation (~2 degrees) per HTML
+              angle: 0.035, // ~2 degrees rotation per HTML
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
@@ -527,7 +546,7 @@ class SpeciesDetailScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 32),
-        // Section header
+        // "Accion Colectiva" label with line
         Row(
           children: [
             Container(
@@ -547,6 +566,7 @@ class SpeciesDetailScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
+        // Headline
         Text(
           '\u00bfPor qu\u00e9 apoyar?',
           style: GoogleFonts.newsreader(
@@ -556,6 +576,7 @@ class SpeciesDetailScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
+        // Body text
         Text(
           'No estamos intentando simplemente rescatar a la Tortuga Boba; estamos invirtiendo en ella para que siga siendo la gran viajera de nuestros mares. Tu apoyo permite que los centros de recuperaci\u00f3n se adelanten a las amenazas.',
           style: GoogleFonts.inter(
@@ -565,11 +586,11 @@ class SpeciesDetailScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        // Supporter avatars
+        // Supporter avatars row
         Row(
           children: [
             SizedBox(
-              width: 136, // 3 avatars + counter stacked
+              width: 136,
               height: 44,
               child: Stack(
                 children: [
@@ -595,7 +616,8 @@ class SpeciesDetailScreen extends StatelessWidget {
                           style: GoogleFonts.inter(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFF004F55), // on-primary-fixed-variant
+                            color: const Color(
+                                0xFF004F55), // on-primary-fixed-variant
                           ),
                         ),
                       ),
@@ -644,6 +666,7 @@ class SpeciesDetailScreen extends StatelessWidget {
   }
 
   // ── Impact Banner ────────────────────────────────────────────────────────
+  // Centered italic headline with top+bottom border
 
   Widget _buildImpactBanner() {
     return Container(
@@ -672,6 +695,7 @@ class SpeciesDetailScreen extends StatelessWidget {
   }
 
   // ── Sticky CTA Button ───────────────────────────────────────────────────
+  // Coral gradient pill with two lines: headline + price
 
   Widget _buildCtaButton(BuildContext context) {
     return Material(
@@ -710,7 +734,7 @@ class SpeciesDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                'desde 5\u20ac/mes',
+                'desde 5\u20ac',
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   color: Colors.white.withValues(alpha: 0.9),
@@ -726,6 +750,7 @@ class SpeciesDetailScreen extends StatelessWidget {
 
 // ── Reusable private widgets ───────────────────────────────────────────────
 
+/// Translucent circle button used over the hero image.
 class _CircleIconButton extends StatelessWidget {
   const _CircleIconButton({required this.icon, required this.onTap});
 
@@ -741,7 +766,7 @@ class _CircleIconButton extends StatelessWidget {
         height: 48,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.black.withValues(alpha: 0.25),
+          color: Colors.black.withValues(alpha: 0.1),
         ),
         child: Icon(icon, color: Colors.white, size: 24),
       ),
@@ -749,6 +774,7 @@ class _CircleIconButton extends StatelessWidget {
   }
 }
 
+/// White stat card with icon, uppercase label, and custom value widget.
 class _StatCard extends StatelessWidget {
   const _StatCard({
     required this.icon,
@@ -769,7 +795,8 @@ class _StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: FaumaColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: FaumaColors.outlineVariant.withValues(alpha: 0.4)),
+        border:
+            Border.all(color: FaumaColors.outlineVariant.withValues(alpha: 0.4)),
         boxShadow: const [
           BoxShadow(
             color: FaumaColors.whisperShadow,

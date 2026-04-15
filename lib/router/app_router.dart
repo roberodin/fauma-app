@@ -14,7 +14,7 @@ import 'package:fauma_app/screens/explore/explore_screen.dart';
 import 'package:fauma_app/screens/my_animals/my_animals_screen.dart';
 import 'package:fauma_app/screens/profile/profile_screen.dart';
 
-// Explore sub-routes
+// Explore sub-routes (Stitch subscriber screens)
 import 'package:fauma_app/screens/explore/species_detail_screen.dart';
 import 'package:fauma_app/screens/explore/species_subscriber_screen.dart';
 import 'package:fauma_app/screens/explore/project_detail_screen.dart';
@@ -26,19 +26,6 @@ import 'package:fauma_app/screens/conversion/shipping_screen.dart';
 import 'package:fauma_app/screens/conversion/gift_screen.dart';
 import 'package:fauma_app/screens/conversion/payment_screen.dart';
 import 'package:fauma_app/screens/conversion/success_screen.dart';
-
-// My Animals sub-routes
-import 'package:fauma_app/screens/my_animals/animal_detail_screen.dart';
-import 'package:fauma_app/screens/my_animals/animal_gallery_screen.dart';
-import 'package:fauma_app/screens/my_animals/curiosities_screen.dart';
-import 'package:fauma_app/screens/my_animals/health_diary_screen.dart';
-
-// My Project sub-routes
-import 'package:fauma_app/screens/my_project/my_project_screen.dart';
-import 'package:fauma_app/screens/my_project/deep_dive_screen.dart';
-import 'package:fauma_app/screens/my_project/team_screen.dart';
-import 'package:fauma_app/screens/my_project/results_screen.dart';
-import 'package:fauma_app/screens/my_project/project_gallery_screen.dart';
 
 // Navigator keys for ShellRoute
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -88,7 +75,7 @@ final GoRouter appRouter = GoRouter(
             child: ExploreScreen(),
           ),
           routes: [
-            // Public presentation (pre-subscription)
+            // Public species presentation (pre-subscription)
             GoRoute(
               path: 'species/:id',
               parentNavigatorKey: _rootNavigatorKey,
@@ -96,7 +83,7 @@ final GoRouter appRouter = GoRouter(
                 id: state.pathParameters['id']!,
               ),
             ),
-            // Subscriber view with botonera (post-subscription)
+            // Subscriber species view with botonera (post-subscription)
             GoRoute(
               path: 'species/:id/subscriber',
               parentNavigatorKey: _rootNavigatorKey,
@@ -104,7 +91,7 @@ final GoRouter appRouter = GoRouter(
                 id: state.pathParameters['id']!,
               ),
             ),
-            // Public presentation (pre-subscription)
+            // Public project presentation (pre-subscription)
             GoRoute(
               path: 'project/:id',
               parentNavigatorKey: _rootNavigatorKey,
@@ -112,7 +99,7 @@ final GoRouter appRouter = GoRouter(
                 id: state.pathParameters['id']!,
               ),
             ),
-            // Subscriber view with botonera (post-subscription)
+            // Subscriber project view with botonera (post-subscription)
             GoRoute(
               path: 'project/:id/subscriber',
               parentNavigatorKey: _rootNavigatorKey,
@@ -123,44 +110,12 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
 
-        // Tab 2 — My Animals
+        // Tab 2 — My Animals (list only; detail goes to subscriber screens)
         GoRoute(
           path: '/my-animals',
           pageBuilder: (context, state) => const NoTransitionPage(
             child: MyAnimalsScreen(),
           ),
-          routes: [
-            GoRoute(
-              path: ':id',
-              parentNavigatorKey: _rootNavigatorKey,
-              builder: (context, state) => AnimalDetailScreen(
-                id: state.pathParameters['id']!,
-              ),
-              routes: [
-                GoRoute(
-                  path: 'gallery',
-                  parentNavigatorKey: _rootNavigatorKey,
-                  builder: (context, state) => AnimalGalleryScreen(
-                    animalId: state.pathParameters['id']!,
-                  ),
-                ),
-                GoRoute(
-                  path: 'curiosities',
-                  parentNavigatorKey: _rootNavigatorKey,
-                  builder: (context, state) => CuriositiesScreen(
-                    animalId: state.pathParameters['id']!,
-                  ),
-                ),
-                GoRoute(
-                  path: 'health',
-                  parentNavigatorKey: _rootNavigatorKey,
-                  builder: (context, state) => HealthDiaryScreen(
-                    animalId: state.pathParameters['id']!,
-                  ),
-                ),
-              ],
-            ),
-          ],
         ),
 
         // Tab 3 — Profile
@@ -195,40 +150,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/conversion/success',
       builder: (context, state) => const SuccessScreen(),
-    ),
-
-    // ── My Project (outside shell — full screen) ────────────
-    GoRoute(
-      path: '/my-project/:id',
-      builder: (context, state) => MyProjectScreen(
-        id: state.pathParameters['id']!,
-      ),
-      routes: [
-        GoRoute(
-          path: 'deep-dive',
-          builder: (context, state) => DeepDiveScreen(
-            projectId: state.pathParameters['id']!,
-          ),
-        ),
-        GoRoute(
-          path: 'team',
-          builder: (context, state) => TeamScreen(
-            projectId: state.pathParameters['id']!,
-          ),
-        ),
-        GoRoute(
-          path: 'results',
-          builder: (context, state) => ResultsScreen(
-            projectId: state.pathParameters['id']!,
-          ),
-        ),
-        GoRoute(
-          path: 'gallery',
-          builder: (context, state) => ProjectGalleryScreen(
-            projectId: state.pathParameters['id']!,
-          ),
-        ),
-      ],
     ),
   ],
 );

@@ -1,35 +1,34 @@
+import 'package:fauma_app/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 
-const _kCoral = Color(0xFFF4847A);
+const _kPayPalBlue = Color(0xFF003087);
 
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: FaumaColors.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Top App Bar ─────────────────────────────────
+              // ── Top App Bar ─────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
                 child: Row(
                   children: [
                     GestureDetector(
                       onTap: () => context.pop(),
-                      child: SizedBox(
+                      child: const SizedBox(
                         width: 48,
                         height: 48,
                         child: Icon(Icons.arrow_back,
-                            color: cs.onSurface),
+                            color: FaumaColors.onSurface),
                       ),
                     ),
                     Expanded(
@@ -39,7 +38,7 @@ class PaymentScreen extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                           letterSpacing: -0.3,
-                          color: cs.onSurface,
+                          color: FaumaColors.onSurface,
                         ),
                       ),
                     ),
@@ -53,18 +52,18 @@ class PaymentScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Order Summary Card ─────────────────────
-                    _buildOrderSummary(cs),
+                    // ── Order Summary Card ─────────────────────────
+                    _buildOrderSummary(),
                     const SizedBox(height: 32),
 
-                    // ── Payment Method Section ─────────────────
+                    // ── Payment Method Section ────────────────────
                     Text(
-                      'SELECCIONAR METODO DE PAGO',
+                      'SELECCIONAR M\u00C9TODO DE PAGO',
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 1.5,
-                        color: cs.secondary,
+                        color: FaumaColors.secondary,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -74,20 +73,18 @@ class PaymentScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: _walletButton(
-                            cs,
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.apple,
-                                    color: cs.onSurface, size: 24),
+                                const Icon(Icons.apple,
+                                    color: FaumaColors.onSurface, size: 24),
                                 const SizedBox(width: 4),
                                 Text(
                                   'Pay',
                                   style: GoogleFonts.inter(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
-                                    color: cs.onSurface,
+                                    color: FaumaColors.onSurface,
                                   ),
                                 ),
                               ],
@@ -97,19 +94,17 @@ class PaymentScreen extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _walletButton(
-                            cs,
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.g_mobiledata,
-                                    color: cs.onSurface, size: 28),
+                                const Icon(Icons.g_mobiledata,
+                                    color: FaumaColors.onSurface, size: 28),
                                 Text(
                                   'Google Pay',
                                   style: GoogleFonts.inter(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w700,
-                                    color: cs.onSurface,
+                                    color: FaumaColors.onSurface,
                                   ),
                                 ),
                               ],
@@ -122,20 +117,19 @@ class PaymentScreen extends StatelessWidget {
 
                     // PayPal button
                     _walletButton(
-                      cs,
                       fullWidth: true,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.account_balance_wallet,
-                              color: const Color(0xFF003087)),
+                          const Icon(Icons.account_balance_wallet,
+                              color: _kPayPalBlue),
                           const SizedBox(width: 8),
                           Text(
                             'PayPal',
                             style: GoogleFonts.inter(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: const Color(0xFF003087),
+                              color: _kPayPalBlue,
                             ),
                           ),
                         ],
@@ -146,9 +140,17 @@ class PaymentScreen extends StatelessWidget {
                     // Credit card input
                     TextField(
                       decoration: InputDecoration(
-                        hintText: 'Tarjeta de credito',
-                        suffixIcon:
-                            Icon(Icons.credit_card, color: cs.secondary),
+                        hintText: 'Tarjeta de cr\u00E9dito',
+                        suffixIcon: const Icon(Icons.credit_card,
+                            color: FaumaColors.secondary),
+                        filled: true,
+                        fillColor: FaumaColors.surfaceContainerLow,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(999),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 16),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -158,8 +160,16 @@ class PaymentScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: TextField(
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: 'MM / AA',
+                              filled: true,
+                              fillColor: FaumaColors.surfaceContainerLow,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(999),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 16),
                             ),
                           ),
                         ),
@@ -167,8 +177,16 @@ class PaymentScreen extends StatelessWidget {
                         Expanded(
                           child: TextField(
                             obscureText: true,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: 'CVV',
+                              filled: true,
+                              fillColor: FaumaColors.surfaceContainerLow,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(999),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 16),
                             ),
                           ),
                         ),
@@ -176,21 +194,21 @@ class PaymentScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
 
-                    // ── Primary CTA ────────────────────────────
+                    // ── Primary CTA ───────────────────────────────
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () =>
                             context.go('/conversion/success'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: _kCoral,
+                          backgroundColor: FaumaColors.coralCta,
                           foregroundColor: Colors.white,
                           shape: const StadiumBorder(),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20),
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 20),
                           elevation: 8,
-                          shadowColor:
-                              cs.onSurface.withValues(alpha: 0.05),
+                          shadowColor: FaumaColors.onSurface
+                              .withValues(alpha: 0.05),
                         ),
                         child: Text(
                           'Confirmar pago \u00B7 \u20AC15',
@@ -206,14 +224,14 @@ class PaymentScreen extends StatelessWidget {
                     // Terms text
                     Center(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32),
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 32),
                         child: Text(
-                          'Al confirmar, aceptas los terminos y condiciones',
+                          'Al confirmar, aceptas los t\u00E9rminos y condiciones',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: 12,
-                            color: cs.outline,
+                            color: const Color(0xFF6F797A), // outline
                             height: 1.5,
                           ),
                         ),
@@ -229,12 +247,13 @@ class PaymentScreen extends StatelessWidget {
     );
   }
 
-  // ── Order Summary Card ────────────────────────────────────────
-  Widget _buildOrderSummary(ColorScheme cs) {
+  // ── Order Summary Card ──────────────────────────────────────────
+  Widget _buildOrderSummary() {
     return Container(
       padding: const EdgeInsets.all(24),
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Stack(
@@ -245,16 +264,15 @@ class PaymentScreen extends StatelessWidget {
               // Badge row
               Row(
                 children: [
-                  Icon(Icons.egg,
-                      color: cs.primary, size: 20),
+                  const Icon(Icons.egg, color: FaumaColors.primary, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    'APOYO UNICO',
+                    'APOYO \u00DANICO',
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 2,
-                      color: cs.secondary,
+                      color: FaumaColors.secondary,
                     ),
                   ),
                 ],
@@ -265,7 +283,7 @@ class PaymentScreen extends StatelessWidget {
                 style: GoogleFonts.newsreader(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: cs.onSurface,
+                  color: FaumaColors.onSurface,
                 ),
               ),
               const SizedBox(height: 24),
@@ -280,7 +298,7 @@ class PaymentScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: cs.primaryContainer
+                      color: FaumaColors.primaryContainer
                           .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(999),
                     ),
@@ -289,7 +307,7 @@ class PaymentScreen extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: cs.primary,
+                        color: FaumaColors.primary,
                       ),
                     ),
                   ),
@@ -298,7 +316,7 @@ class PaymentScreen extends StatelessWidget {
                     style: GoogleFonts.newsreader(
                       fontSize: 30,
                       fontWeight: FontWeight.w700,
-                      color: cs.primary,
+                      color: FaumaColors.primary,
                     ),
                   ),
                 ],
@@ -309,20 +327,20 @@ class PaymentScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: cs.surfaceContainerLowest
+                  color: FaumaColors.surfaceContainerLowest
                       .withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.redeem,
-                        color: cs.secondary, size: 20),
+                    const Icon(Icons.redeem,
+                        color: FaumaColors.secondary, size: 20),
                     const SizedBox(width: 8),
                     Text(
                       'Incluye regalo (Merchan 1)',
                       style: GoogleFonts.inter(
                         fontSize: 14,
-                        color: cs.secondary,
+                        color: FaumaColors.secondary,
                       ),
                     ),
                   ],
@@ -339,7 +357,7 @@ class PaymentScreen extends StatelessWidget {
               height: 128,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: cs.primary.withValues(alpha: 0.05),
+                color: FaumaColors.primary.withValues(alpha: 0.05),
               ),
             ),
           ),
@@ -348,14 +366,13 @@ class PaymentScreen extends StatelessWidget {
     );
   }
 
-  // ── Wallet Button ─────────────────────────────────────────────
-  Widget _walletButton(ColorScheme cs,
-      {required Widget child, bool fullWidth = false}) {
+  // ── Wallet Button ───────────────────────────────────────────────
+  Widget _walletButton({required Widget child, bool fullWidth = false}) {
     return Container(
       width: fullWidth ? double.infinity : null,
       height: fullWidth ? 56 : 64,
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.transparent),
       ),

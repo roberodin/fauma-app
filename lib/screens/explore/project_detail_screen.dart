@@ -9,8 +9,9 @@ import '../../widgets/fauma_image.dart';
 const _heroImageUrl =
     'https://lh3.googleusercontent.com/aida-public/AB6AXuDouoOvg36oN4eIecD5NkhSHP-qfyslsJdeUCR5G3TwPgGTukaRXw0GFrAta1pVuE1hJt8Y33q6yRdssWwBmnP-CL9YDGend33L82hBIMo2ewyc3wj8xK5vQUCZAhAZh6NVd3-5EmqFNkAVSy-c__l77akKSICRH6NUAyvF56v9LQDbrL1kOJPMpU0xTxPPuPOwnqIQFyPBGo7EYp78cO5ViE6Q-Vo_WfnLIbbjyVbw5G3DPNpWNdfINrCrwpDhfZeR4Lh8dArYqpVb';
 
-
 /// Public presentation view of a project (pre-subscription).
+///
+/// Design reference: 41-proyecto-presentacion.html
 class ProjectDetailScreen extends StatefulWidget {
   const ProjectDetailScreen({super.key, required this.id});
 
@@ -23,86 +24,17 @@ class ProjectDetailScreen extends StatefulWidget {
 class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: FaumaColors.surface,
       body: Stack(
         children: [
+          // ── Scrollable content ──
           CustomScrollView(
             slivers: [
               // ── Hero image (530px from Stitch) ──
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 530,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      FaumaImage(
-                        imageUrl: _heroImageUrl,
-                        fit: BoxFit.cover,
-                      ),
-                      // Gradient overlay
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                              cs.surface,
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 0.2),
-                            ],
-                            stops: const [0.0, 0.5, 1.0],
-                          ),
-                        ),
-                      ),
-                      // Back button + badge overlay
-                      Positioned(
-                        top: MediaQuery.of(context).padding.top + 8,
-                        left: 16,
-                        child: Row(
-                          children: [
-                            _GlassBadgeButton(
-                              icon: Icons.arrow_back,
-                              onTap: () {
-                                if (context.canPop()) {
-                                  context.pop();
-                                } else {
-                                  context.go('/explore');
-                                }
-                              },
-                            ),
-                            const SizedBox(width: 12),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(999),
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.3),
-                                ),
-                              ),
-                              child: Text(
-                                'PROYECTO ACTIVO',
-                                style: GoogleFonts.inter(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              SliverToBoxAdapter(child: _buildHeroSection(context)),
 
-              // ── Content canvas (overlapping hero by -48px) ──
+              // ── Content canvas (overlaps hero by -48px) ──
               SliverToBoxAdapter(
                 child: Transform.translate(
                   offset: const Offset(0, -48),
@@ -111,7 +43,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 3. Headline
+                        // 3. Headline + scientific name
                         Text(
                           'Proyecto Pintarroja',
                           style: GoogleFonts.newsreader(
@@ -127,14 +59,15 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           style: GoogleFonts.inter(
                             fontSize: 14,
                             fontStyle: FontStyle.italic,
-                            color: FaumaColors.secondary.withValues(alpha: 0.7),
+                            color:
+                                FaumaColors.secondary.withValues(alpha: 0.7),
                           ),
                         ),
 
                         // 4. Banner phrase
                         const SizedBox(height: 16),
                         Text(
-                          '"No hace falta ser grande para importar."',
+                          '\u201CNo hace falta ser grande para importar.\u201D',
                           style: GoogleFonts.newsreader(
                             fontSize: 18,
                             fontStyle: FontStyle.italic,
@@ -142,76 +75,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           ),
                         ),
 
-                        // 5. Stats row
+                        // 5. Stats row (3-column)
                         const SizedBox(height: 32),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _StatCell(
-                                icon: Icons.shield,
-                                label: 'IUCN',
-                                value: 'Preocupación menor',
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _StatCell(
-                                icon: Icons.trending_flat,
-                                label: 'TENDENCIA',
-                                value: 'Estable',
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _StatCell(
-                                icon: Icons.scale,
-                                label: 'PESO',
-                                value: '~1 kg',
-                              ),
-                            ),
-                          ],
-                        ),
+                        _buildStatsRow(),
 
-                        // 6. Mini-presentation
+                        // 6. Mini-presentation card
                         const SizedBox(height: 40),
-                        Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: cs.surface,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: FaumaColors.outlineVariant
-                                  .withValues(alpha: 0.4),
-                            ),
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                color: cs.onSurface,
-                                height: 1.7,
-                              ),
-                              children: [
-                                const TextSpan(
-                                  text:
-                                      'La pintarroja es un pequeño tiburón de fondo, esencial en los ecosistemas mediterráneos. Sus huevos, conocidos popularmente como ',
-                                ),
-                                TextSpan(
-                                  text: 'bolsos de sirena',
-                                  style: GoogleFonts.newsreader(
-                                    fontSize: 14,
-                                    fontStyle: FontStyle.italic,
-                                    color: FaumaColors.primary,
-                                  ),
-                                ),
-                                const TextSpan(
-                                  text:
-                                      ', son cápsulas coriáceas que se enganchan a corales y algas, protegiendo al embrión durante su desarrollo.',
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        _buildMiniPresentation(),
 
                         // 7. Importance & Why support
                         const SizedBox(height: 24),
@@ -220,10 +90,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               FaumaColors.primary.withValues(alpha: 0.1),
                           icon: Icons.eco,
                           iconColor: FaumaColors.primary,
-                          title: 'Importancia Ecológica',
+                          title: 'Importancia Ecol\u00f3gica',
                           titleColor: FaumaColors.primary,
                           description:
-                              'Controla las poblaciones de crustáceos y moluscos, manteniendo el equilibrio de los fondos marinos.',
+                              'Controla las poblaciones de crust\u00e1ceos y moluscos, manteniendo el equilibrio de los fondos marinos.',
                         ),
                         const SizedBox(height: 24),
                         _ImportanceRow(
@@ -231,40 +101,19 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               FaumaColors.tertiary.withValues(alpha: 0.1),
                           icon: Icons.favorite,
                           iconColor: FaumaColors.tertiary,
-                          title: '¿Por qué apoyar?',
+                          title: '\u00bfPor qu\u00e9 apoyar?',
                           titleColor: FaumaColors.tertiary,
                           description:
-                              'Es una especie modelo para estudiar la evolución de los vertebrados y la regeneración de hábitats marinos degradados.',
+                              'Es una especie modelo para estudiar la evoluci\u00f3n de los vertebrados y la regeneraci\u00f3n de h\u00e1bitats marinos degradados.',
                         ),
 
-                        // 8. Vertical timeline — Fases del Proyecto
+                        // 8. Vertical timeline -- Fases del Proyecto
                         const SizedBox(height: 48),
                         _buildPhasesSection(),
 
                         // 9. Collaborators
                         const SizedBox(height: 40),
-                        Text(
-                          'COLABORADORES',
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: FaumaColors.secondary,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              _CollaboratorName('Asociación LAMNA'),
-                              const SizedBox(width: 32),
-                              _CollaboratorName('Fundación Oceanogràfic'),
-                              const SizedBox(width: 32),
-                              _CollaboratorName('Fundación Azul Marino'),
-                            ],
-                          ),
-                        ),
+                        _buildCollaborators(),
 
                         // Bottom spacing for CTA
                         const SizedBox(height: 140),
@@ -281,48 +130,73 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(
-                  24, 16, 24, MediaQuery.of(context).padding.bottom + 24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    cs.surface,
-                    cs.surface,
-                    cs.surface.withValues(alpha: 0),
-                  ],
-                  stops: const [0.0, 0.7, 1.0],
-                ),
+            child: _buildStickyCta(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Hero Section ─────────────────────────────────────────────────────────
+  // 530px tall with gradient, glass back button + "Proyecto activo" badge
+
+  Widget _buildHeroSection(BuildContext context) {
+    return SizedBox(
+      height: 530,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          FaumaImage(
+            imageUrl: _heroImageUrl,
+            fit: BoxFit.cover,
+          ),
+          // Gradient overlay: bottom surface -> transparent -> top 20% black
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  FaumaColors.surface,
+                  Colors.transparent,
+                  Colors.black.withValues(alpha: 0.2),
+                ],
+                stops: const [0.0, 0.5, 1.0],
               ),
-              child: SizedBox(
-                height: 56,
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => context.go('/conversion/level/${widget.id}'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: FaumaColors.coralCta,
-                    foregroundColor: Colors.white,
-                    elevation: 4,
-                    shadowColor: FaumaColors.coralCta.withValues(alpha: 0.3),
-                    shape: const StadiumBorder(),
+            ),
+          ),
+          // Top: back button + badge
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 8,
+            left: 16,
+            child: Row(
+              children: [
+                _GlassBadgeButton(
+                  icon: Icons.arrow_back,
+                  onTap: () => context.go('/explore'),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.3),
+                    ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Apoyar este proyecto — desde 4,99\u20AC/mes',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const Icon(Icons.arrow_forward, size: 20),
-                    ],
+                  child: Text(
+                    'PROYECTO ACTIVO',
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ],
@@ -330,7 +204,83 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     );
   }
 
+  // ── Stats Row (3-column) ─────────────────────────────────────────────────
+  // IUCN | Tendencia | Peso
+
+  Widget _buildStatsRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: _StatCell(
+            icon: Icons.shield,
+            label: 'IUCN',
+            value: 'Preocupaci\u00f3n menor',
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _StatCell(
+            icon: Icons.trending_flat,
+            label: 'TENDENCIA',
+            value: 'Estable',
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _StatCell(
+            icon: Icons.scale,
+            label: 'PESO',
+            value: '~1 kg',
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Mini Presentation ────────────────────────────────────────────────────
+
+  Widget _buildMiniPresentation() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: FaumaColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: FaumaColors.outlineVariant.withValues(alpha: 0.4),
+        ),
+      ),
+      child: RichText(
+        text: TextSpan(
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            color: FaumaColors.onSurface,
+            height: 1.7,
+          ),
+          children: [
+            const TextSpan(
+              text:
+                  'La pintarroja es un peque\u00f1o tibur\u00f3n de fondo, esencial en los ecosistemas mediterr\u00e1neos. Sus huevos, conocidos popularmente como ',
+            ),
+            TextSpan(
+              text: 'bolsos de sirena',
+              style: GoogleFonts.newsreader(
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
+                color: FaumaColors.primary,
+              ),
+            ),
+            const TextSpan(
+              text:
+                  ', son c\u00e1psulas cori\u00e1ceas que se enganchan a corales y algas, protegiendo al embri\u00f3n durante su desarrollo.',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ── Phases timeline ─────────────────────────────────────────────────
+
   Widget _buildPhasesSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -361,34 +311,35 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           isCurrent: false,
           icon: Icons.description,
           title: 'Contexto',
-          subtitle: 'Análisis del estado de la especie en la zona.',
+          subtitle: 'An\u00e1lisis del estado de la especie en la zona.',
         ),
         _PhaseItem(
           isCompleted: true,
           isCurrent: false,
           icon: Icons.phishing,
-          title: 'Recolección',
-          subtitle: 'Rescate de cápsulas de huevo de redes de pesca.',
+          title: 'Recolecci\u00f3n',
+          subtitle: 'Rescate de c\u00e1psulas de huevo de redes de pesca.',
         ),
         _PhaseItem(
           isCompleted: false,
           isCurrent: true,
           icon: Icons.egg,
-          title: 'Incubación (Activa)',
-          subtitle: 'Cuidado controlado en tanques de temperatura estable.',
+          title: 'Incubaci\u00f3n (Activa)',
+          subtitle:
+              'Cuidado controlado en tanques de temperatura estable.',
         ),
         _PhaseItem(
           isCompleted: false,
           isCurrent: false,
           icon: Icons.monitor_heart,
           title: 'Triaje',
-          subtitle: 'Evaluación de viabilidad de los embriones.',
+          subtitle: 'Evaluaci\u00f3n de viabilidad de los embriones.',
         ),
         _PhaseItem(
           isCompleted: false,
           isCurrent: false,
           icon: Icons.celebration,
-          title: 'Eclosión',
+          title: 'Eclosi\u00f3n',
           subtitle: 'Nacimiento supervisado de los alevines.',
         ),
         _PhaseItem(
@@ -402,9 +353,91 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       ],
     );
   }
+
+  // ── Collaborators ────────────────────────────────────────────────────────
+
+  Widget _buildCollaborators() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'COLABORADORES',
+          style: GoogleFonts.inter(
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            color: FaumaColors.secondary,
+            letterSpacing: 2,
+          ),
+        ),
+        const SizedBox(height: 16),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _CollaboratorName('Asociaci\u00f3n LAMNA'),
+              const SizedBox(width: 32),
+              _CollaboratorName('Fundaci\u00f3n Oceanogr\u00e0fic'),
+              const SizedBox(width: 32),
+              _CollaboratorName('Fundaci\u00f3n Azul Marino'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Sticky CTA ───────────────────────────────────────────────────────────
+  // Full-width coral button with arrow, fades into surface gradient at top
+
+  Widget _buildStickyCta(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+          24, 16, 24, MediaQuery.of(context).padding.bottom + 24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          colors: [
+            FaumaColors.surface,
+            FaumaColors.surface,
+            FaumaColors.surface.withValues(alpha: 0),
+          ],
+          stops: const [0.0, 0.7, 1.0],
+        ),
+      ),
+      child: SizedBox(
+        height: 56,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => context.go('/conversion/level/${widget.id}'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: FaumaColors.coralCta,
+            foregroundColor: Colors.white,
+            elevation: 4,
+            shadowColor: FaumaColors.coralCta.withValues(alpha: 0.3),
+            shape: const StadiumBorder(),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Apoyar este proyecto \u2014 desde 4,99\u20ac',
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Icon(Icons.arrow_forward, size: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 // ── Glass badge button ──────────────────────────────────────────────────────
+// Translucent circle with blur-like background over the hero image
 
 class _GlassBadgeButton extends StatelessWidget {
   const _GlassBadgeButton({required this.icon, required this.onTap});
@@ -431,6 +464,7 @@ class _GlassBadgeButton extends StatelessWidget {
 }
 
 // ── Stat cell ───────────────────────────────────────────────────────────────
+// Compact stat with icon, uppercase label, and value text
 
 class _StatCell extends StatelessWidget {
   const _StatCell({
@@ -482,6 +516,7 @@ class _StatCell extends StatelessWidget {
 }
 
 // ── Importance row ──────────────────────────────────────────────────────────
+// Icon circle + title + description in a horizontal row
 
 class _ImportanceRow extends StatelessWidget {
   const _ImportanceRow({
@@ -545,6 +580,7 @@ class _ImportanceRow extends StatelessWidget {
 }
 
 // ── Phase item (vertical timeline) ──────────────────────────────────────────
+// Dot rail on the left, icon + text content on the right
 
 class _PhaseItem extends StatelessWidget {
   const _PhaseItem({
@@ -618,7 +654,7 @@ class _PhaseItem extends StatelessWidget {
                         )
                       : null,
                 ),
-                // Line
+                // Connecting line
                 if (!isLast)
                   Expanded(
                     child: Container(

@@ -1,6 +1,6 @@
+import 'package:fauma_app/theme/colors.dart';
 import 'package:fauma_app/widgets/fauma_image.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,7 +18,7 @@ class GiftScreen extends StatefulWidget {
 class _GiftScreenState extends State<GiftScreen> {
   bool _sendNow = true;
   int _messageLength = 0;
-  String _selectedCountry = 'Espana';
+  String _selectedCountry = 'Espa\u00F1a';
   final _messageController = TextEditingController();
 
   @override
@@ -37,23 +37,22 @@ class _GiftScreenState extends State<GiftScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: FaumaColors.surface,
       body: Column(
         children: [
-          // ── Top App Bar ─────────────────────────────────────
+          // ── Top App Bar ─────────────────────────────────────────
           SafeArea(
             bottom: false,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 16),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               decoration: BoxDecoration(
-                color: cs.surface,
+                color: FaumaColors.surface,
                 border: Border(
                   bottom: BorderSide(
-                    color: cs.surfaceContainerLow.withValues(alpha: 0.2),
+                    color: FaumaColors.surfaceContainerLow
+                        .withValues(alpha: 0.2),
                   ),
                 ),
               ),
@@ -63,12 +62,11 @@ class _GiftScreenState extends State<GiftScreen> {
                     onTap: () => context.pop(),
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.transparent,
                       ),
-                      child: Icon(Icons.arrow_back,
-                          color: cs.primaryContainer),
+                      child: const Icon(Icons.arrow_back,
+                          color: FaumaColors.primaryContainer),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -78,67 +76,91 @@ class _GiftScreenState extends State<GiftScreen> {
                       style: GoogleFonts.newsreader(
                         fontSize: 20,
                         fontStyle: FontStyle.italic,
-                        color: cs.onSurface,
+                        color: FaumaColors.onSurface,
                         letterSpacing: -0.3,
                       ),
                     ),
                   ),
-                  Icon(Icons.redeem, color: cs.primaryContainer),
+                  const Icon(Icons.redeem, color: FaumaColors.primaryContainer),
                 ],
               ),
             ),
           ),
 
-          // ── Scrollable Body ─────────────────────────────────
+          // ── Scrollable Body ─────────────────────────────────────
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 160),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Selected Item Card ──────────────────────
-                  _buildSelectedItemCard(cs),
+                  // ── Selected Item Card ──────────────────────────
+                  _buildSelectedItemCard(),
                   const SizedBox(height: 40),
 
-                  // ── Recipient Section ───────────────────────
+                  // ── Recipient Section ──────────────────────────
                   Text(
-                    '\u00BFPara quien es?',
+                    '\u00BFPara qui\u00E9n es?',
                     style: GoogleFonts.newsreader(
                       fontSize: 30,
                       fontWeight: FontWeight.w700,
                       letterSpacing: -0.5,
-                      color: cs.onSurface,
+                      color: FaumaColors.onSurface,
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Nombre del destinatario',
+                      filled: true,
+                      fillColor: FaumaColors.surfaceContainerLow,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(999),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 16),
                     ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Email del destinatario',
+                      filled: true,
+                      fillColor: FaumaColors.surfaceContainerLow,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(999),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 16),
                     ),
                   ),
                   const SizedBox(height: 40),
 
-                  // ── Delivery Section ────────────────────────
+                  // ── Delivery Section ───────────────────────────
                   Text(
-                    'ENVIO DEL MERCHANDISING',
+                    'ENV\u00CDO DEL MERCHANDISING',
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.5,
-                      color: cs.secondary,
+                      color: FaumaColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Direccion completa',
+                    decoration: InputDecoration(
+                      hintText: 'Direcci\u00F3n completa',
+                      filled: true,
+                      fillColor: FaumaColors.surfaceContainerLow,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(999),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 16),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -146,16 +168,32 @@ class _GiftScreenState extends State<GiftScreen> {
                     children: [
                       Expanded(
                         child: TextField(
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Ciudad',
+                            filled: true,
+                            fillColor: FaumaColors.surfaceContainerLow,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(999),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 16),
                           ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Codigo Postal',
+                          decoration: InputDecoration(
+                            hintText: 'C\u00F3digo Postal',
+                            filled: true,
+                            fillColor: FaumaColors.surfaceContainerLow,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(999),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 16),
                           ),
                         ),
                       ),
@@ -163,47 +201,51 @@ class _GiftScreenState extends State<GiftScreen> {
                   ),
                   const SizedBox(height: 12),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     decoration: BoxDecoration(
-                      color: cs.surfaceContainerLow,
+                      color: FaumaColors.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: _selectedCountry,
                         isExpanded: true,
-                        icon: Icon(Icons.expand_more,
-                            color: cs.outline),
-                        items: ['Espana', 'Portugal', 'Francia', 'Italia']
-                            .map((e) => DropdownMenuItem(
-                                value: e, child: Text(e)))
+                        icon: const Icon(Icons.expand_more,
+                            color: Color(0xFF6F797A)), // outline
+                        items: [
+                          'Espa\u00F1a',
+                          'Portugal',
+                          'Francia',
+                          'Italia',
+                        ]
+                            .map((e) =>
+                                DropdownMenuItem(value: e, child: Text(e)))
                             .toList(),
                         onChanged: (val) => setState(
                             () => _selectedCountry = val ?? _selectedCountry),
                         style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: cs.onSurface,
+                          color: FaumaColors.onSurface,
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 40),
 
-                  // ── Personal Message Section ────────────────
+                  // ── Personal Message Section ───────────────────
                   Text(
                     'Dedicatoria',
                     style: GoogleFonts.newsreader(
                       fontSize: 30,
                       fontWeight: FontWeight.w700,
                       letterSpacing: -0.5,
-                      color: cs.onSurface,
+                      color: FaumaColors.onSurface,
                     ),
                   ),
                   const SizedBox(height: 16),
                   Container(
                     decoration: BoxDecoration(
-                      color: cs.surfaceContainerLow,
+                      color: FaumaColors.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -217,25 +259,24 @@ class _GiftScreenState extends State<GiftScreen> {
                                   required isFocused,
                                   required maxLength}) =>
                               null,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText:
-                                'Escribe un mensaje personal para acompanar el regalo...',
+                                'Escribe un mensaje personal para acompa\u00F1ar el regalo...',
                             border: InputBorder.none,
                             filled: false,
-                            contentPadding:
-                                const EdgeInsets.all(24),
+                            contentPadding: EdgeInsets.all(24),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              right: 16, bottom: 8),
+                          padding:
+                              const EdgeInsets.only(right: 16, bottom: 8),
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
                               '$_messageLength/200',
                               style: GoogleFonts.inter(
                                 fontSize: 12,
-                                color: cs.secondary
+                                color: FaumaColors.secondary
                                     .withValues(alpha: 0.6),
                               ),
                             ),
@@ -246,11 +287,11 @@ class _GiftScreenState extends State<GiftScreen> {
                   ),
                   const SizedBox(height: 40),
 
-                  // ── Delivery Date Section ───────────────────
+                  // ── Delivery Date Section ──────────────────────
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: cs.surfaceContainerLow
+                      color: FaumaColors.surfaceContainerLow
                           .withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -258,12 +299,12 @@ class _GiftScreenState extends State<GiftScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '\u00BFCUANDO ENVIAR?',
+                          '\u00BFCU\u00C1NDO ENVIAR?',
                           style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1.5,
-                            color: cs.secondary,
+                            color: FaumaColors.secondary,
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -271,9 +312,9 @@ class _GiftScreenState extends State<GiftScreen> {
                           readOnly: true,
                           decoration: InputDecoration(
                             hintText: 'Seleccionar fecha',
-                            suffixIcon: Icon(Icons.calendar_today,
-                                color: cs.outline),
-                            fillColor: cs.surfaceContainerLowest,
+                            suffixIcon: const Icon(Icons.calendar_today,
+                                color: Color(0xFF6F797A)),
+                            fillColor: FaumaColors.surfaceContainerLowest,
                           ),
                           onTap: () async {
                             await showDatePicker(
@@ -285,61 +326,64 @@ class _GiftScreenState extends State<GiftScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Enviar ahora',
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: cs.onSurface,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () => setState(
-                                  () => _sendNow = !_sendNow),
-                              child: AnimatedContainer(
-                                duration: const Duration(
-                                    milliseconds: 200),
-                                width: 48,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(999),
-                                  color: _sendNow
-                                      ? cs.primary
-                                      : cs.surfaceContainerHighest,
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Enviar ahora',
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: FaumaColors.onSurface,
                                 ),
-                                child: AnimatedAlign(
-                                  duration: const Duration(
-                                      milliseconds: 200),
-                                  alignment: _sendNow
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                                  child: Container(
-                                    width: 16,
-                                    height: 16,
-                                    margin:
-                                        const EdgeInsets.symmetric(
-                                            horizontal: 4),
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white,
+                              ),
+                              GestureDetector(
+                                onTap: () =>
+                                    setState(() => _sendNow = !_sendNow),
+                                child: AnimatedContainer(
+                                  duration:
+                                      const Duration(milliseconds: 200),
+                                  width: 48,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(999),
+                                    color: _sendNow
+                                        ? FaumaColors.primary
+                                        : const Color(0xFFE8E1DC), // surface-container-highest
+                                  ),
+                                  child: AnimatedAlign(
+                                    duration:
+                                        const Duration(milliseconds: 200),
+                                    alignment: _sendNow
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                    child: Container(
+                                      width: 16,
+                                      height: 16,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 40),
 
-                  // ── Preview Card ────────────────────────────
+                  // ── Preview Card ───────────────────────────────
                   Padding(
                     padding: const EdgeInsets.only(left: 16),
                     child: Text(
@@ -348,12 +392,12 @@ class _GiftScreenState extends State<GiftScreen> {
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 2,
-                        color: cs.secondary,
+                        color: FaumaColors.secondary,
                       ),
                     ),
                   ),
                   const SizedBox(height: 12),
-                  _buildPreviewCard(cs),
+                  _buildPreviewCard(),
                 ],
               ),
             ),
@@ -361,27 +405,27 @@ class _GiftScreenState extends State<GiftScreen> {
         ],
       ),
 
-      // ── Sticky CTA ─────────────────────────────────────────
+      // ── Sticky CTA ─────────────────────────────────────────────
       bottomSheet: Container(
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
         decoration: BoxDecoration(
-          color: cs.surface.withValues(alpha: 0.8),
+          color: FaumaColors.surface.withValues(alpha: 0.8),
         ),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                cs.primary,
-                cs.primaryContainer,
+                FaumaColors.primary,
+                FaumaColors.primaryContainer,
               ],
             ),
             borderRadius: BorderRadius.circular(999),
             boxShadow: [
               BoxShadow(
-                color: cs.primary.withValues(alpha: 0.2),
+                color: FaumaColors.primary.withValues(alpha: 0.2),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),
@@ -406,8 +450,7 @@ class _GiftScreenState extends State<GiftScreen> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Icon(Icons.arrow_forward,
-                        color: Colors.white),
+                    const Icon(Icons.arrow_forward, color: Colors.white),
                   ],
                 ),
               ),
@@ -418,12 +461,12 @@ class _GiftScreenState extends State<GiftScreen> {
     );
   }
 
-  // ── Selected Item Card ────────────────────────────────────────
-  Widget _buildSelectedItemCard(ColorScheme cs) {
+  // ── Selected Item Card ──────────────────────────────────────────
+  Widget _buildSelectedItemCard() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -433,10 +476,10 @@ class _GiftScreenState extends State<GiftScreen> {
             height: 96,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: cs.surface, width: 4),
+              border: Border.all(color: FaumaColors.surface, width: 4),
               boxShadow: [
                 BoxShadow(
-                  color: cs.onSurface.withValues(alpha: 0.05),
+                  color: FaumaColors.onSurface.withValues(alpha: 0.05),
                   blurRadius: 4,
                 ),
               ],
@@ -454,12 +497,12 @@ class _GiftScreenState extends State<GiftScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'SUSCRIPCION ACTIVA',
+                  'SUSCRIPCI\u00D3N ACTIVA',
                   style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 2,
-                    color: cs.secondary,
+                    color: FaumaColors.secondary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -469,15 +512,15 @@ class _GiftScreenState extends State<GiftScreen> {
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                     height: 1.2,
-                    color: cs.onSurface,
+                    color: FaumaColors.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Nivel: Hermano \u00B7 \u20AC15/mes',
+                  'Nivel: Hermano \u00B7 \u20AC15',
                   style: GoogleFonts.inter(
                     fontSize: 14,
-                    color: cs.onSurfaceVariant,
+                    color: FaumaColors.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -485,21 +528,21 @@ class _GiftScreenState extends State<GiftScreen> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: cs.surfaceContainerHighest,
+                    color: const Color(0xFFE8E1DC), // surface-container-highest
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.card_giftcard,
-                          size: 14, color: cs.primary),
+                      const Icon(Icons.card_giftcard,
+                          size: 14, color: FaumaColors.primary),
                       const SizedBox(width: 4),
                       Text(
                         'Incluye peluche',
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: cs.primary,
+                          color: FaumaColors.primary,
                         ),
                       ),
                     ],
@@ -513,67 +556,85 @@ class _GiftScreenState extends State<GiftScreen> {
     );
   }
 
-  // ── Preview Card ──────────────────────────────────────────────
-  Widget _buildPreviewCard(ColorScheme cs) {
+  // ── Preview Card ────────────────────────────────────────────────
+  Widget _buildPreviewCard() {
     return Container(
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLowest,
+        color: FaumaColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cs.outlineVariant.withValues(alpha: 0.15),
+          color: FaumaColors.outlineVariant.withValues(alpha: 0.15),
         ),
         boxShadow: [
           BoxShadow(
-            color: cs.onSurface.withValues(alpha: 0.06),
+            color: FaumaColors.onSurface.withValues(alpha: 0.06),
             blurRadius: 40,
             offset: const Offset(0, 40),
           ),
         ],
       ),
-      child: Column(
+      child: Stack(
         children: [
-          const Text('\uD83C\uDF81', style: TextStyle(fontSize: 36)),
-          const SizedBox(height: 16),
-          RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              style: GoogleFonts.newsreader(
-                fontSize: 18,
-                fontStyle: FontStyle.italic,
-                color: cs.onSurface,
-                height: 1.5,
+          // Decorative blob
+          Positioned(
+            top: -40,
+            right: -40,
+            child: Container(
+              width: 128,
+              height: 128,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: FaumaColors.primary.withValues(alpha: 0.05),
               ),
-              children: [
-                const TextSpan(
-                    text: 'Maria te ha regalado la proteccion de una '),
-                TextSpan(
-                  text: 'Tortuga Caretta caretta',
+            ),
+          ),
+          Column(
+            children: [
+              const Text('\uD83C\uDF81', style: TextStyle(fontSize: 36)),
+              const SizedBox(height: 16),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
                   style: GoogleFonts.newsreader(
                     fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.normal,
-                    color: cs.primary,
+                    fontStyle: FontStyle.italic,
+                    color: FaumaColors.onSurface,
+                    height: 1.5,
                   ),
+                  children: [
+                    const TextSpan(
+                        text:
+                            'Mar\u00EDa te ha regalado la protecci\u00F3n de una '),
+                    TextSpan(
+                      text: 'Tortuga Caretta caretta',
+                      style: GoogleFonts.newsreader(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.normal,
+                        color: FaumaColors.primary,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            width: 48,
-            height: 1,
-            color: cs.surfaceContainerHighest,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '\u201C\u00A1Espero que te guste este pequeno gesto por el planeta!\u201D',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontStyle: FontStyle.italic,
-              color: cs.secondary,
-            ),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: 48,
+                height: 1,
+                color: const Color(0xFFE8E1DC), // surface-container-highest
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '\u201C\u00A1Espero que te guste este peque\u00F1o gesto por el planeta!\u201D',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  color: FaumaColors.secondary,
+                ),
+              ),
+            ],
           ),
         ],
       ),

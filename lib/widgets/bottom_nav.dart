@@ -69,7 +69,7 @@ class ScaffoldWithBottomNav extends StatelessWidget {
               Icons.pets,
               color: theme.colorScheme.primary,
             ),
-            label: 'Mis Animales',
+            label: 'Mis Apoyos',
           ),
           NavigationDestination(
             icon: Icon(

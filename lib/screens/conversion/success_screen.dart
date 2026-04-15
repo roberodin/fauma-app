@@ -1,27 +1,24 @@
+import 'package:fauma_app/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-
-const _kCoral = Color(0xFFF4847A);
 
 class SuccessScreen extends StatelessWidget {
   const SuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: FaumaColors.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 24, vertical: 48),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // ── Success Icon with particles ──────────────
+                // ── Success Icon with particles ──────────────────
                 SizedBox(
                   width: 120,
                   height: 120,
@@ -35,10 +32,10 @@ class SuccessScreen extends StatelessWidget {
                           height: 96,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: cs.primary,
+                            color: FaumaColors.primary,
                             boxShadow: [
                               BoxShadow(
-                                color: cs.primary
+                                color: FaumaColors.primary
                                     .withValues(alpha: 0.3),
                                 blurRadius: 16,
                                 offset: const Offset(0, 4),
@@ -49,6 +46,7 @@ class SuccessScreen extends StatelessWidget {
                             Icons.check,
                             color: Colors.white,
                             size: 48,
+                            weight: 600,
                           ),
                         ),
                       ),
@@ -61,7 +59,8 @@ class SuccessScreen extends StatelessWidget {
                           height: 16,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _kCoral.withValues(alpha: 0.4),
+                            color: FaumaColors.coralCta
+                                .withValues(alpha: 0.4),
                           ),
                         ),
                       ),
@@ -74,7 +73,7 @@ class SuccessScreen extends StatelessWidget {
                           height: 12,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: cs.primary
+                            color: FaumaColors.primary
                                 .withValues(alpha: 0.3),
                           ),
                         ),
@@ -88,7 +87,7 @@ class SuccessScreen extends StatelessWidget {
                           height: 8,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: cs.secondary
+                            color: FaumaColors.secondary
                                 .withValues(alpha: 0.2),
                           ),
                         ),
@@ -98,19 +97,19 @@ class SuccessScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
 
-                // ── Title ──────────────────────────────────
+                // ── Title ─────────────────────────────────────────
                 Text(
-                  '\u00A1Bienvenido, heroe!',
+                  '\u00A1Bienvenido, h\u00E9roe!',
                   style: GoogleFonts.newsreader(
                     fontSize: 36,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
-                    color: cs.onSurface,
+                    color: FaumaColors.onSurface,
                   ),
                 ),
                 const SizedBox(height: 12),
 
-                // ── Subtitle ───────────────────────────────
+                // ── Subtitle ──────────────────────────────────────
                 SizedBox(
                   width: 280,
                   child: RichText(
@@ -118,47 +117,47 @@ class SuccessScreen extends StatelessWidget {
                     text: TextSpan(
                       style: GoogleFonts.inter(
                         fontSize: 16,
-                        color: cs.secondary,
+                        color: FaumaColors.secondary,
                         height: 1.5,
                       ),
                       children: [
                         const TextSpan(
-                            text: 'Tu suscripcion a '),
+                            text: 'Tu suscripci\u00F3n a '),
                         TextSpan(
                           text: 'Tortuga Caretta caretta',
                           style: GoogleFonts.inter(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: cs.onSurface,
+                            color: FaumaColors.onSurface,
                           ),
                         ),
                         const TextSpan(
-                            text: ' ya esta activa.'),
+                            text: ' ya est\u00E1 activa.'),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 40),
 
-                // ── Summary Card ───────────────────────────
-                _buildSummaryCard(cs),
+                // ── Summary Card ──────────────────────────────────
+                _buildSummaryCard(),
                 const SizedBox(height: 40),
 
-                // ── CTAs ───────────────────────────────────
+                // ── CTAs ──────────────────────────────────────────
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () =>
-                        context.go('/my-animals/caretta'),
+                        context.go('/explore/species/caretta/subscriber'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _kCoral,
+                      backgroundColor: FaumaColors.coralCta,
                       foregroundColor: Colors.white,
                       shape: const StadiumBorder(),
                       padding:
                           const EdgeInsets.symmetric(vertical: 20),
                       elevation: 8,
-                      shadowColor:
-                          cs.onSurface.withValues(alpha: 0.05),
+                      shadowColor: FaumaColors.onSurface
+                          .withValues(alpha: 0.05),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -185,19 +184,20 @@ class SuccessScreen extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: cs.primary,
+                      color: FaumaColors.primary,
                     ),
                   ),
                 ),
                 const SizedBox(height: 64),
 
-                // ── Ecological Seal ─────────────────────────
+                // ── Ecological Seal ───────────────────────────────
                 Opacity(
                   opacity: 0.4,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.eco, size: 14, color: cs.onSurface),
+                      const Icon(Icons.eco,
+                          size: 14, color: FaumaColors.onSurface),
                       const SizedBox(width: 8),
                       Text(
                         'FAUMA CONSERVATION ALLIANCE',
@@ -205,7 +205,7 @@ class SuccessScreen extends StatelessWidget {
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 3,
-                          color: cs.onSurface,
+                          color: FaumaColors.onSurface,
                         ),
                       ),
                     ],
@@ -219,13 +219,14 @@ class SuccessScreen extends StatelessWidget {
     );
   }
 
-  // ── Summary Card ──────────────────────────────────────────────
-  Widget _buildSummaryCard(ColorScheme cs) {
+  // ── Summary Card ────────────────────────────────────────────────
+  Widget _buildSummaryCard() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(32),
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
+        color: FaumaColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Stack(
@@ -239,7 +240,7 @@ class SuccessScreen extends StatelessWidget {
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 2,
-                  color: cs.secondary,
+                  color: FaumaColors.secondary,
                 ),
               ),
               const SizedBox(height: 4),
@@ -248,32 +249,32 @@ class SuccessScreen extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: cs.primary,
+                  color: FaumaColors.primary,
                 ),
               ),
               const SizedBox(height: 24),
 
               Row(
                 children: [
-                  Icon(Icons.auto_stories,
-                      color: cs.primary, size: 24),
+                  const Icon(Icons.auto_stories,
+                      color: FaumaColors.primary, size: 24),
                   const SizedBox(width: 12),
                   Expanded(
                     child: RichText(
                       text: TextSpan(
                         style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: cs.onSurfaceVariant,
+                          color: FaumaColors.onSurfaceVariant,
                         ),
                         children: [
                           const TextSpan(
-                              text: 'Proximo contenido: '),
+                              text: 'Pr\u00F3ximo contenido: '),
                           TextSpan(
-                            text: 'en 2 dias',
+                            text: 'en 2 d\u00EDas',
                             style: GoogleFonts.inter(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: cs.onSurfaceVariant,
+                              color: FaumaColors.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -285,25 +286,25 @@ class SuccessScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Icon(Icons.local_shipping,
-                      color: cs.primary, size: 24),
+                  const Icon(Icons.local_shipping,
+                      color: FaumaColors.primary, size: 24),
                   const SizedBox(width: 12),
                   Expanded(
                     child: RichText(
                       text: TextSpan(
                         style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: cs.onSurfaceVariant,
+                          color: FaumaColors.onSurfaceVariant,
                         ),
                         children: [
                           const TextSpan(
-                              text: 'Tu peluche llegara en '),
+                              text: 'Tu peluche llegar\u00E1 en '),
                           TextSpan(
-                            text: '7-10 dias',
+                            text: '7-10 d\u00EDas',
                             style: GoogleFonts.inter(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: cs.onSurfaceVariant,
+                              color: FaumaColors.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -323,7 +324,7 @@ class SuccessScreen extends StatelessWidget {
               height: 160,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: cs.primary.withValues(alpha: 0.05),
+                color: FaumaColors.primary.withValues(alpha: 0.05),
               ),
             ),
           ),

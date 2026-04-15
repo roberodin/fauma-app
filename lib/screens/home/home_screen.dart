@@ -1,10 +1,10 @@
-import 'package:fauma_app/widgets/fauma_image.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../theme/colors.dart';
+import '../../widgets/fauma_image.dart';
 
-/// Image URLs extracted from 14-home.html
+/// Image URLs from the Stitch design (14-home.html).
 const _kBabyTurtle =
     'https://lh3.googleusercontent.com/aida-public/AB6AXuBxAKoIJ18zLHDN5wfR2OXp82IAqp3ztH1P1mcxu6SIFrfX-0AJKJDwUDYHbGzTmB8396PVyVFVJGLYkdfV94WeWecbr94es21QxHMVRSwnkroOo5zTEkYvHgI7yUpOFaAz6qZ6uGjD1T9sPBuCQu0HWh-OtQGByQHLHp7yAGX_Ftj7M4jQ1fEK_nFEYxPK90IAVIY3hMo6BgsxLaxkfCFBzcFUy7RvnWFvNZAeVDgk2vPwaglI_E_FpbJXBQh8-NiNKq3bqx5MhWW7';
 const _kPenguins =
@@ -12,29 +12,35 @@ const _kPenguins =
 const _kScientificIllustration =
     'https://lh3.googleusercontent.com/aida-public/AB6AXuBFdLkAht236els0cCgzqU_8-c_tKCG7e9ni_V_lGZCsnd8qnGePxHLu_b-al_Vv1xdKipImWn3y0h3UMDJG7UjbtnhEv0vQodpmKevSyxtmKVYOkt-28C07HTZ1RESz9kzrNKBTHcSl643A6pzReaufQiyQwq-jhC1ThxWnHjLJ4vLFdh4WYnpaXJXRdH793OhfinlW7EQnuFikCA-HFfAp-GB8ZrWRAK7u8owpbuHTekOj5n864jGZnacauVG2B2sy-sICxQzvkLg';
 
+/// Extended color tokens from the Stitch design that are not in FaumaColors.
+const _kTertiaryFixed = Color(0xFFFFDAD6);
+const _kPrimaryFixed = Color(0xFFA6EFF6);
+const _kSecondaryContainer = Color(0xFFD7E3F9);
+const _kOnSecondaryContainer = Color(0xFF596577);
+const _kSecondaryFixed = Color(0xFFD7E3F9);
+const _kSurfaceContainer = Color(0xFFF3EDE7);
+const _kSurfaceContainerHighest = Color(0xFFE8E1DC);
+const _kOutline = Color(0xFF6F797A);
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: FaumaColors.surface,
       body: Column(
         children: [
-          // ── Top App Bar ─────────────────────────────────────
+          // -- Top App Bar --
           SafeArea(
             bottom: false,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               decoration: BoxDecoration(
-                color: cs.surface,
+                color: FaumaColors.surface,
                 border: Border(
                   bottom: BorderSide(
-                    color:
-                        cs.primaryContainer.withValues(alpha: 0.1),
+                    color: FaumaColors.primaryContainer.withValues(alpha: 0.1),
                   ),
                 ),
               ),
@@ -45,17 +51,17 @@ class HomeScreen extends StatelessWidget {
                     style: GoogleFonts.newsreader(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: cs.primaryContainer,
+                      color: FaumaColors.primaryContainer,
                       letterSpacing: -0.3,
                     ),
                   ),
                   const Spacer(),
                   Text(
-                    'Buenos dias, Maria',
+                    'Buenos d\u00edas, Mar\u00eda',
                     style: GoogleFonts.newsreader(
                       fontSize: 20,
                       fontStyle: FontStyle.italic,
-                      color: cs.primaryContainer,
+                      color: FaumaColors.primaryContainer,
                       letterSpacing: -0.3,
                     ),
                   ),
@@ -64,8 +70,10 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {},
-                        icon: Icon(Icons.notifications_outlined,
-                            color: cs.primaryContainer),
+                        icon: const Icon(
+                          Icons.notifications_outlined,
+                          color: FaumaColors.primaryContainer,
+                        ),
                       ),
                       Positioned(
                         top: 10,
@@ -74,10 +82,10 @@ class HomeScreen extends StatelessWidget {
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
-                            color: cs.tertiary,
+                            color: FaumaColors.tertiary,
                             shape: BoxShape.circle,
-                            border: Border.all(
-                                color: cs.surface, width: 2),
+                            border:
+                                Border.all(color: FaumaColors.surface, width: 2),
                           ),
                         ),
                       ),
@@ -88,43 +96,40 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          // ── Scrollable body ─────────────────────────────────
+          // -- Scrollable body --
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Impact Card Section ─────────────────────
-                  _buildImpactCard(cs),
+                  // -- Impact Card Section --
+                  _buildImpactCard(),
                   const SizedBox(height: 24),
 
-                  // ── Species Feed Header ─────────────────────
+                  // -- Species Feed Header --
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Especies',
                           style: GoogleFonts.newsreader(
                             fontSize: 30,
                             fontWeight: FontWeight.w700,
-                            color: cs.onSurface,
+                            color: FaumaColors.onSurface,
                           ),
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFDAD6),
-                            borderRadius:
-                                BorderRadius.circular(999),
+                            color: _kTertiaryFixed,
+                            borderRadius: BorderRadius.circular(999),
                             border: Border.all(
-                              color: cs.tertiary
-                                  .withValues(alpha: 0.2),
+                              color:
+                                  FaumaColors.tertiary.withValues(alpha: 0.2),
                             ),
                           ),
                           child: Text(
@@ -132,7 +137,7 @@ class HomeScreen extends StatelessWidget {
                             style: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
-                              color: cs.tertiary,
+                              color: FaumaColors.tertiary,
                             ),
                           ),
                         ),
@@ -141,41 +146,38 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Feed Card 1: Photo ──────────────────────
+                  // -- Feed Card 1: Photo --
                   _buildPhotoCard(
                     context,
-                    cs,
                     imageUrl: _kBabyTurtle,
-                    badge: '\uD83D\uDCF8 Foto nueva',
-                    title:
-                        'Temporada de anidacion: primeros nidos',
+                    badge: '\u{1F4F8} Foto nueva',
+                    title: 'Temporada de anidaci\u00f3n: primeros nidos',
                     species: 'Tortuga Caretta',
                     time: 'Hace 2h',
                     hasNewDot: true,
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Feed Card 2: Video ──────────────────────
+                  // -- Feed Card 2: Video --
                   _buildVideoCard(
-                    cs,
                     imageUrl: _kPenguins,
-                    badge: '\uD83D\uDCF9 Video',
-                    title: 'Nuevo video: Alimentacion en grupo',
-                    species: 'Pinguino Papua',
-                    time: 'Hace 1 dia',
+                    badge: '\u{1F4F9} V\u00eddeo',
+                    title: 'Nuevo v\u00eddeo: Alimentaci\u00f3n en grupo',
+                    species: 'Ping\u00fcino Pap\u00faa',
+                    time: 'Hace 1 d\u00eda',
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Feed Card 3: Project (horizontal) ───────
-                  _buildProjectCard(cs),
+                  // -- Feed Card 3: Project (horizontal) --
+                  _buildProjectCard(),
                   const SizedBox(height: 16),
 
-                  // ── Global News Card ────────────────────────
-                  _buildGlobalCard(cs),
+                  // -- Global News Card --
+                  _buildGlobalCard(),
                   const SizedBox(height: 24),
 
-                  // ── Discover CTA ────────────────────────────
-                  _buildDiscoverCta(cs),
+                  // -- Discover CTA --
+                  _buildDiscoverCta(context),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -186,19 +188,19 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ── Impact Card ───────────────────────────────────────────────
-  Widget _buildImpactCard(ColorScheme cs) {
+  // ── Impact Card ─────────────────────────────────────────────────────
+  Widget _buildImpactCard() {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(12),
+        color: FaumaColors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cs.outlineVariant.withValues(alpha: 0.3),
+          color: FaumaColors.outlineVariant.withValues(alpha: 0.3),
         ),
         boxShadow: [
           BoxShadow(
-            color: cs.onSurface.withValues(alpha: 0.04),
+            color: FaumaColors.onSurface.withValues(alpha: 0.04),
             blurRadius: 8,
           ),
         ],
@@ -206,7 +208,7 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          // Header row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,24 +221,24 @@ class HomeScreen extends StatelessWidget {
                     style: GoogleFonts.newsreader(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: cs.primaryContainer,
+                      color: FaumaColors.primaryContainer,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Resumen de tu contribucion actual',
+                    'Resumen de tu contribuci\u00f3n actual',
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: cs.secondary,
+                      color: FaumaColors.secondary,
                     ),
                   ),
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: cs.primaryContainer.withValues(alpha: 0.1),
+                  color: FaumaColors.primaryContainer.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
@@ -245,7 +247,7 @@ class HomeScreen extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1,
-                    color: cs.primaryContainer,
+                    color: FaumaColors.primaryContainer,
                   ),
                 ),
               ),
@@ -253,45 +255,43 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Stats grid
+          // Stats grid (2 columns)
           Row(
             children: [
-              Expanded(child: _statCell(cs, '2', 'ESPECIES')),
+              Expanded(child: _statCell('2', 'ESPECIES')),
               const SizedBox(width: 16),
-              Expanded(child: _statCell(cs, '6', 'MESES')),
+              Expanded(child: _statCell('6', 'MESES')),
             ],
           ),
           const SizedBox(height: 32),
 
-          // Milestones
+          // Milestones header
           Text(
             'Hitos alcanzados',
             style: GoogleFonts.newsreader(
               fontSize: 18,
               fontStyle: FontStyle.italic,
-              color: cs.onSurfaceVariant,
+              color: FaumaColors.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 12),
+
+          // Milestones horizontal list
           SizedBox(
             height: 88,
             child: ListView(
               scrollDirection: Axis.horizontal,
+              clipBehavior: Clip.none,
               children: [
-                _milestone(cs, Icons.workspace_premium,
-                    'Primer apoyo', true),
+                _milestone(Icons.workspace_premium, 'Primer apoyo', true),
                 const SizedBox(width: 16),
-                _milestone(cs, Icons.water_drop,
-                    'Amigo del oceano', true),
+                _milestone(Icons.water_drop, 'Amigo del oc\u00e9ano', true),
                 const SizedBox(width: 16),
-                _milestone(
-                    cs, Icons.egg, 'Protector de tortugas', true),
+                _milestone(Icons.egg, 'Protector de tortugas', true),
                 const SizedBox(width: 16),
-                _milestone(
-                    cs, Icons.lock, '6 meses seguidos', false),
+                _milestone(Icons.lock, '6 meses seguidos', false),
                 const SizedBox(width: 16),
-                _milestone(
-                    cs, Icons.lock, 'Heroe global', false),
+                _milestone(Icons.lock, 'H\u00e9roe global', false),
               ],
             ),
           ),
@@ -303,11 +303,11 @@ class HomeScreen extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: cs.tertiary,
+                backgroundColor: FaumaColors.tertiary,
                 foregroundColor: Colors.white,
                 shape: const StadiumBorder(),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                elevation: 0,
               ),
               icon: const Icon(Icons.share, size: 18),
               label: Text(
@@ -324,7 +324,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _statCell(ColorScheme cs, String value, String label) {
+  Widget _statCell(String value, String label) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -338,7 +338,7 @@ class HomeScreen extends StatelessWidget {
             style: GoogleFonts.inter(
               fontSize: 24,
               fontWeight: FontWeight.w700,
-              color: cs.primary,
+              color: FaumaColors.primary,
             ),
           ),
           const SizedBox(height: 4),
@@ -348,7 +348,7 @@ class HomeScreen extends StatelessWidget {
               fontSize: 10,
               fontWeight: FontWeight.w700,
               letterSpacing: 2,
-              color: cs.secondary,
+              color: FaumaColors.secondary,
             ),
           ),
         ],
@@ -356,64 +356,64 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _milestone(
-      ColorScheme cs, IconData icon, String label, bool unlocked) {
-    return Column(
-      children: [
-        Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: unlocked
-                ? cs.primaryContainer
-                : cs.surfaceContainerHighest,
-            border: unlocked
-                ? null
-                : Border.all(
-                    color: cs.outline,
-                    width: 2,
-                    strokeAlign: BorderSide.strokeAlignOutside,
-                  ),
-            boxShadow: unlocked
-                ? [
-                    BoxShadow(
-                      color: cs.primaryContainer
-                          .withValues(alpha: 0.3),
-                      blurRadius: 8,
+  Widget _milestone(IconData icon, String label, bool unlocked) {
+    return Opacity(
+      opacity: unlocked ? 1.0 : 0.4,
+      child: Column(
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: unlocked ? FaumaColors.primaryContainer : _kSecondaryFixed,
+              border: unlocked
+                  ? null
+                  : Border.all(
+                      color: _kOutline,
+                      width: 2,
+                      strokeAlign: BorderSide.strokeAlignOutside,
                     ),
-                  ]
-                : null,
-          ),
-          child: Icon(
-            icon,
-            color: unlocked ? Colors.white : cs.secondary,
-            size: 24,
-          ),
-        ),
-        const SizedBox(height: 4),
-        SizedBox(
-          width: 60,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              color: unlocked ? cs.onSurface : cs.secondary,
+              boxShadow: unlocked
+                  ? [
+                      BoxShadow(
+                        color: FaumaColors.primaryContainer
+                            .withValues(alpha: 0.3),
+                        blurRadius: 8,
+                      ),
+                    ]
+                  : null,
+            ),
+            child: Icon(
+              icon,
+              color: unlocked ? Colors.white : FaumaColors.secondary,
+              size: 24,
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 4),
+          SizedBox(
+            width: 60,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+                height: 1.2,
+                color: unlocked ? FaumaColors.onSurface : FaumaColors.secondary,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  // ── Photo Feed Card ───────────────────────────────────────────
+  // ── Photo Feed Card ─────────────────────────────────────────────────
   Widget _buildPhotoCard(
-    BuildContext context,
-    ColorScheme cs, {
+    BuildContext context, {
     required String imageUrl,
     required String badge,
     required String title,
@@ -422,13 +422,14 @@ class HomeScreen extends StatelessWidget {
     bool hasNewDot = false,
   }) {
     return GestureDetector(
-      onTap: () => context.go('/my-animals/caretta'),
+      onTap: () => context.go('/explore/species/caretta/subscriber'),
       child: Container(
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(12),
+          color: _kSurfaceContainerHighest.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: cs.outlineVariant.withValues(alpha: 0.2),
+            color: FaumaColors.outlineVariant.withValues(alpha: 0.2),
           ),
         ),
         child: Column(
@@ -436,16 +437,12 @@ class HomeScreen extends StatelessWidget {
             // Image area
             Stack(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(12)),
-                  child: SizedBox(
-                    height: 192,
-                    width: double.infinity,
-                    child: FaumaImage(
-                      imageUrl: imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                SizedBox(
+                  height: 192,
+                  width: double.infinity,
+                  child: FaumaImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 // Badge
@@ -456,21 +453,29 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: cs.primaryContainer,
+                      color: FaumaColors.primaryContainer,
                       borderRadius: BorderRadius.circular(999),
                     ),
-                    child: Text(
-                      badge,
-                      style: GoogleFonts.inter(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                        color: Colors.white,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.photo_camera,
+                            size: 12, color: Colors.white),
+                        const SizedBox(width: 4),
+                        Text(
+                          badge,
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                // Blue dot
+                // Blue "new" dot
                 if (hasNewDot)
                   Positioned(
                     top: 12,
@@ -501,42 +506,11 @@ class HomeScreen extends StatelessWidget {
                     style: GoogleFonts.newsreader(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: cs.onSurface,
+                      color: FaumaColors.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        species,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.3,
-                          color: cs.secondary,
-                        ),
-                      ),
-                      Container(
-                        width: 4,
-                        height: 4,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 8),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: cs.outline,
-                        ),
-                      ),
-                      Text(
-                        time,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.3,
-                          color: cs.secondary,
-                        ),
-                      ),
-                    ],
-                  ),
+                  _metaRow(species, time),
                 ],
               ),
             ),
@@ -546,9 +520,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ── Video Feed Card ───────────────────────────────────────────
-  Widget _buildVideoCard(
-    ColorScheme cs, {
+  // ── Video Feed Card ─────────────────────────────────────────────────
+  Widget _buildVideoCard({
     required String imageUrl,
     required String badge,
     required String title,
@@ -556,32 +529,29 @@ class HomeScreen extends StatelessWidget {
     required String time,
   }) {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
+        color: _kSurfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cs.outlineVariant.withValues(alpha: 0.2),
+          color: FaumaColors.outlineVariant.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
         children: [
-          // Image area with play button
+          // Image area with play overlay
           Stack(
             alignment: Alignment.center,
             children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12)),
-                child: SizedBox(
-                  height: 192,
-                  width: double.infinity,
-                  child: FaumaImage(
-                    imageUrl: imageUrl,
-                    fit: BoxFit.cover,
-                  ),
+              SizedBox(
+                height: 192,
+                width: double.infinity,
+                child: FaumaImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
                 ),
               ),
-              // Play button overlay
+              // Play button
               Container(
                 width: 56,
                 height: 56,
@@ -610,20 +580,28 @@ class HomeScreen extends StatelessWidget {
                 top: 12,
                 left: 12,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: cs.primaryContainer,
+                    color: FaumaColors.primaryContainer,
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: Text(
-                    badge,
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1,
-                      color: Colors.white,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.videocam,
+                          size: 12, color: Colors.white),
+                      const SizedBox(width: 4),
+                      Text(
+                        badge,
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -640,42 +618,11 @@ class HomeScreen extends StatelessWidget {
                   style: GoogleFonts.newsreader(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: cs.onSurface,
+                    color: FaumaColors.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      species,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: -0.3,
-                        color: cs.secondary,
-                      ),
-                    ),
-                    Container(
-                      width: 4,
-                      height: 4,
-                      margin:
-                          const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: cs.outline,
-                      ),
-                    ),
-                    Text(
-                      time,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: -0.3,
-                        color: cs.secondary,
-                      ),
-                    ),
-                  ],
-                ),
+                _metaRow(species, time),
               ],
             ),
           ),
@@ -684,129 +631,97 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ── Project Card (horizontal layout) ──────────────────────────
-  Widget _buildProjectCard(ColorScheme cs) {
+  // ── Project Card (horizontal layout) ────────────────────────────────
+  Widget _buildProjectCard() {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
+        color: _kSurfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cs.outlineVariant.withValues(alpha: 0.2),
+          color: FaumaColors.outlineVariant.withValues(alpha: 0.2),
         ),
       ),
-      child: Row(
-        children: [
-          // Image (left third)
-          ClipRRect(
-            borderRadius: const BorderRadius.horizontal(
-                left: Radius.circular(12)),
-            child: SizedBox(
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            // Image (left third)
+            SizedBox(
               width: 120,
-              height: 140,
               child: FaumaImage(
                 imageUrl: _kScientificIllustration,
                 fit: BoxFit.cover,
               ),
             ),
-          ),
-          // Content (right two-thirds)
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: cs.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(999),
+            // Content (right two-thirds)
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: _kSecondaryContainer,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        '\u{1F52C} PROYECTO',
+                        style: GoogleFonts.inter(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1,
+                          color: _kOnSecondaryContainer,
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      '\uD83D\uDD2C PROYECTO',
-                      style: GoogleFonts.inter(
-                        fontSize: 9,
+                    const SizedBox(height: 8),
+                    Text(
+                      'Fase 3 completada: Monitorizaci\u00f3n del desarrollo',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.newsreader(
+                        fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                        color: cs.onSurfaceVariant,
+                        height: 1.2,
+                        color: FaumaColors.onSurface,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Fase 3 completada: Monitorizacion del desarrollo',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.newsreader(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      height: 1.2,
-                      color: cs.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(
-                        'Proyecto Pintarroja',
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.3,
-                          color: cs.secondary,
-                        ),
-                      ),
-                      Container(
-                        width: 4,
-                        height: 4,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 8),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: cs.outline,
-                        ),
-                      ),
-                      Text(
-                        'Hace 3 dias',
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.3,
-                          color: cs.secondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    _metaRow('Proyecto Pintarroja', 'Hace 3 d\u00edas',
+                        fontSize: 10),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  // ── Global News Card ──────────────────────────────────────────
-  Widget _buildGlobalCard(ColorScheme cs) {
+  // ── Global News Card ────────────────────────────────────────────────
+  Widget _buildGlobalCard() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            cs.primaryContainer,
-            cs.primary,
+            FaumaColors.primaryContainer,
+            FaumaColors.primary,
           ],
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cs.primary.withValues(alpha: 0.2),
+          color: FaumaColors.primary.withValues(alpha: 0.2),
         ),
         boxShadow: [
           BoxShadow(
-            color: cs.primary.withValues(alpha: 0.2),
+            color: FaumaColors.primary.withValues(alpha: 0.2),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -814,27 +729,27 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Decorative icon
+          // Decorative background icon
           Positioned(
             right: -16,
             bottom: -16,
             child: Transform.rotate(
               angle: 0.2,
-              child: Opacity(
+              child: const Opacity(
                 opacity: 0.1,
-                child: Icon(Icons.public,
-                    size: 120, color: Colors.white),
+                child: Icon(Icons.public, size: 120, color: Colors.white),
               ),
             ),
           ),
+          // Content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.public,
-                      color: const Color(0xFFFFDAD6), size: 24),
+                  const Icon(Icons.public,
+                      color: _kTertiaryFixed, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -851,10 +766,10 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Gracias a vuestro apoyo, hemos extendido nuestra red de proteccion a 5 nuevas zonas costeras este mes.',
+                'Gracias a vuestro apoyo, hemos extendido nuestra red de protecci\u00f3n a 5 nuevas zonas costeras este mes.',
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: const Color(0xFFA6EFF6),
+                  color: _kPrimaryFixed,
                   height: 1.5,
                 ),
               ),
@@ -875,15 +790,15 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ── Discover CTA ──────────────────────────────────────────────
-  Widget _buildDiscoverCta(ColorScheme cs) {
+  // ── Discover CTA ────────────────────────────────────────────────────
+  Widget _buildDiscoverCta(BuildContext context) {
     return Container(
       height: 128,
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
+        color: _kSurfaceContainer,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cs.tertiary.withValues(alpha: 0.3),
+          color: FaumaColors.tertiary.withValues(alpha: 0.3),
           width: 2,
           strokeAlign: BorderSide.strokeAlignInside,
         ),
@@ -891,13 +806,13 @@ class HomeScreen extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () {},
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => context.go('/explore'),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.add_circle,
-                  color: cs.tertiary, size: 36),
+                  color: FaumaColors.tertiary, size: 36),
               const SizedBox(height: 8),
               Text(
                 'Descubrir nuevas especies',
@@ -905,13 +820,48 @@ class HomeScreen extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   fontStyle: FontStyle.italic,
-                  color: cs.tertiary,
+                  color: FaumaColors.tertiary,
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  // ── Shared metadata row (species + dot + time) ──────────────────────
+  Widget _metaRow(String species, String time, {double fontSize = 12}) {
+    return Row(
+      children: [
+        Text(
+          species,
+          style: GoogleFonts.inter(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            letterSpacing: -0.3,
+            color: FaumaColors.secondary,
+          ),
+        ),
+        Container(
+          width: 4,
+          height: 4,
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: _kOutline,
+          ),
+        ),
+        Text(
+          time,
+          style: GoogleFonts.inter(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            letterSpacing: -0.3,
+            color: FaumaColors.secondary,
+          ),
+        ),
+      ],
     );
   }
 }

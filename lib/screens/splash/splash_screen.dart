@@ -1,7 +1,7 @@
-import 'package:fauma_app/widgets/fauma_image.dart';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fauma_app/theme/colors.dart';
+import 'package:fauma_app/widgets/fauma_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,79 +16,135 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     final h = MediaQuery.of(context).size.height;
-    final heroH = h * 0.50;
+    // HTML: hero is 486px out of min 884px => ~55%
+    final heroH = h * 0.55;
 
     return Scaffold(
       body: SizedBox.expand(
         child: Stack(
           children: [
-            // ── Hero image (top 50%) ─────────────────────────────
+            // ── Hero image (top ~55%) ───────────────────────────────
             Positioned(
-              top: 0, left: 0, right: 0, height: heroH,
+              top: 0,
+              left: 0,
+              right: 0,
+              height: heroH,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
+                  // Background image
                   FaumaImage(
                     imageUrl: _heroImageUrl,
                     fit: BoxFit.cover,
                   ),
-                  // Gradient
+                  // Gradient overlay: from-black/30 via-transparent to-transparent
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withValues(alpha:0.3),
+                          Colors.black.withValues(alpha: 0.30),
                           Colors.transparent,
-                          Colors.black.withValues(alpha:0.15),
+                          Colors.transparent,
                         ],
-                        stops: const [0.0, 0.4, 1.0],
+                        stops: const [0.0, 0.5, 1.0],
                       ),
                     ),
                   ),
-                  // Branding
-                  SafeArea(
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.eco_outlined, color: Colors.white, size: 30),
-                          const SizedBox(height: 4),
-                          Text('Fauma', style: GoogleFonts.newsreader(
-                            fontSize: 32, fontStyle: FontStyle.italic,
-                            color: Colors.white,
-                            shadows: [const Shadow(color: Color(0x44000000), blurRadius: 8)],
-                          )),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Badge
+                  // Top app bar: eco icon + "Fauma" title (centered, py-12 = 48px)
                   Positioned(
-                    bottom: 48, left: 0, right: 0,
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: SafeArea(
+                      bottom: false,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.eco_outlined,
+                              color: Colors.white,
+                              size: 30,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withValues(alpha: 0.3),
+                                  blurRadius: 8,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Fauma',
+                              style: GoogleFonts.newsreader(
+                                fontSize: 30,
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white,
+                                letterSpacing: -0.5,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withValues(alpha: 0.25),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Glassmorphism trust badge: bottom-16 = 64px from hero bottom
+                  Positioned(
+                    bottom: 64,
+                    left: 0,
+                    right: 0,
                     child: Center(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(999),
+                        borderRadius: BorderRadius.circular(9999),
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha:0.2),
-                              borderRadius: BorderRadius.circular(999),
-                              border: Border.all(color: Colors.white.withValues(alpha:0.2)),
+                              color: Colors.white.withValues(alpha: 0.20),
+                              borderRadius: BorderRadius.circular(9999),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.20),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.10),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.favorite, color: Colors.white, size: 13),
-                                const SizedBox(width: 6),
-                                Text('12,847 personas ya apoyan', style: GoogleFonts.inter(
-                                  fontSize: 11, fontWeight: FontWeight.w500, color: Colors.white,
-                                )),
+                                const Icon(
+                                  Icons.favorite,
+                                  color: Colors.white,
+                                  size: 14,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '12,847 personas ya apoyan',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -100,91 +156,191 @@ class SplashScreen extends StatelessWidget {
               ),
             ),
 
-            // ── Content panel (bottom, overlaps hero) ────────────
+            // ── Content panel (overlaps hero by 48px, rounded top) ──
             Positioned(
-              top: heroH - 36,
-              left: 0, right: 0, bottom: 0,
+              // HTML: -mt-12 = 48px overlap
+              top: heroH - 48,
+              left: 0,
+              right: 0,
+              bottom: 0,
               child: Container(
                 decoration: BoxDecoration(
-                  color: cs.surface,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha:0.05), blurRadius: 30, offset: const Offset(0, -10))],
+                  color: FaumaColors.surface,
+                  // HTML: rounded-t-[3.5rem] = 56px
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(56),
+                  ),
+                  // HTML: shadow-[0_-20px_50px_rgba(0,0,0,0.08)]
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 50,
+                      offset: const Offset(0, -20),
+                    ),
+                  ],
                 ),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(28, 36, 28, MediaQuery.of(context).padding.bottom + 16),
+                // HTML: px-8 = 32px, pt-12 = 48px, pb-10 = 40px
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    32,
+                    48,
+                    32,
+                    MediaQuery.of(context).padding.bottom + 40,
+                  ),
                   child: Column(
                     children: [
-                      // Headline
+                      // ── Tagline ───────────────────────────────────
+                      // HTML: text-4xl (36px), font-semibold, tracking-tight
                       Text(
                         'Elige tu causa.\nDescubre su historia.',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.newsreader(
-                          fontSize: 28, fontWeight: FontWeight.w600,
-                          color: cs.onSurface, height: 1.2,
+                          fontSize: 36,
+                          fontWeight: FontWeight.w600,
+                          color: FaumaColors.onSurface,
+                          height: 1.2,
+                          letterSpacing: -0.5,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      // Subtitle
-                      Text(
-                        'Transforma tu apoyo en una experiencia viva de conservaci\u00f3n. Conecta con proyectos reales.',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(fontSize: 14, color: cs.secondary, height: 1.5),
+                      // HTML: mb-4 = 16px
+                      const SizedBox(height: 16),
+
+                      // ── Subtitle ──────────────────────────────────
+                      // HTML: text-lg (18px), text-secondary, leading-relaxed, max-w-[280px], mb-10
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 280),
+                        child: Text(
+                          'Transforma tu apoyo en una\n'
+                          'experiencia viva de conservaci\u00f3n.\n'
+                          'Conecta con proyectos reales y\n'
+                          'recibe contenido exclusivo de los\n'
+                          'animales que proteges.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            color: FaumaColors.secondary,
+                            height: 1.625, // leading-relaxed
+                          ),
+                        ),
                       ),
-                      const Spacer(),
-                      // CTA button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: () => context.go('/onboarding'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _coralStart,
-                            foregroundColor: Colors.white,
-                            elevation: 8,
-                            shadowColor: _coralStart.withValues(alpha: 0.5),
-                            shape: const StadiumBorder(),
-                            textStyle: GoogleFonts.inter(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
+                      // HTML: mb-10 = 40px
+                      const SizedBox(height: 40),
+
+                      // ── Primary CTA button ────────────────────────
+                      // HTML: w-full max-w-sm py-5 rounded-full bg-gradient coral
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 384),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [_coralStart, _coralEnd],
+                              ),
+                              borderRadius: BorderRadius.circular(9999),
+                              // HTML: shadow-[0_8px_30px_rgba(244,132,122,0.3)]
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _coralStart.withValues(alpha: 0.30),
+                                  blurRadius: 30,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () => context.go('/onboarding'),
+                                borderRadius: BorderRadius.circular(9999),
+                                child: Padding(
+                                  // HTML: py-5 = 20px vertical padding
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                    horizontal: 24,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'C\u00f3mo funciona Fauma',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Icon(
+                                        Icons.arrow_forward,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('C\u00f3mo funciona Fauma'),
-                              SizedBox(width: 10),
-                              Icon(Icons.arrow_forward_rounded, size: 20),
-                            ],
-                          ),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      // Secondary links
+
+                      // HTML: mt-8 = 32px
+                      const SizedBox(height: 32),
+
+                      // ── Secondary nav links ───────────────────────
+                      // HTML: text-sm (14px), font-medium, text-secondary
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           GestureDetector(
                             onTap: () => context.go('/login'),
-                            child: Text('Iniciar Sesi\u00f3n', style: GoogleFonts.inter(
-                              fontSize: 13, fontWeight: FontWeight.w500, color: cs.secondary,
-                            )),
+                            child: Text(
+                              'Iniciar Sesi\u00f3n',
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: FaumaColors.secondary,
+                              ),
+                            ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Container(width: 3, height: 3, decoration: BoxDecoration(color: cs.outlineVariant, shape: BoxShape.circle)),
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Container(
+                              width: 4,
+                              height: 4,
+                              decoration: const BoxDecoration(
+                                color: FaumaColors.outlineVariant,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
                           ),
-                          Text('\u00bfC\u00f3digo regalo?', style: GoogleFonts.inter(
-                            fontSize: 13, fontWeight: FontWeight.w500, color: cs.secondary,
-                          )),
+                          Text(
+                            '\u00bfTienes un c\u00f3digo regalo?',
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: FaumaColors.secondary,
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      // Branding
+
+                      // ── Bottom branding ───────────────────────────
+                      // HTML: mt-auto pt-10 = 40px
+                      const SizedBox(height: 40),
                       Opacity(
-                        opacity: 0.08,
-                        child: Text('FAUMA', style: GoogleFonts.newsreader(
-                          fontSize: 16, fontStyle: FontStyle.italic, letterSpacing: 5, color: cs.onSurface,
-                        )),
+                        opacity: 0.10,
+                        child: Text(
+                          'FAUMA',
+                          style: GoogleFonts.newsreader(
+                            fontSize: 18,
+                            fontStyle: FontStyle.italic,
+                            letterSpacing: 6,
+                            color: FaumaColors.onSurface,
+                          ),
+                        ),
                       ),
                     ],
                   ),
